@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<title>Asset</title>
+<div th:replace="fragments/header :: header"></div>
+<body class="hold-transition sidebar-mini">
+	<!-- Site wrapper START-->
+	<div class="wrapper">
+		<!-- TOP Menu (all meta link scripts go here ) START -->
+		<div th:replace="fragments/top-menu :: top-menu"></div>
+		<!-- TOP Menu (all meta link scripts go here ) END -->
+		<!-- Left side column. contains the sidebar START -->
+		<div th:replace="fragments/left-menu-panel :: left-menu-panel"></div>
+		<!-- Left side column. contains the sidebar END -->
+		<!-- Content Wrapper. Contains page content START -->
+		<div class="content-wrapper">
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>Notification</h1>
+						</div>
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">Notification</a></li>
+								<li class="breadcrumb-item active">Asset</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+			<section class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="box-header">
+	                                <div class="alert alert-success" th:if="${successMsg != null}">
+	                                    <strong>Success! </strong>
+	                                    <div th:text="${successMsg}"/>
+	                                </div>
+	                                <div class="alert alert-warning" th:if="${warningMessage != null}">
+	                                    <strong>Warning! </strong>
+	                                    <div th:text="${warningMessage}"/>
+	                                </div>
+	                                <div class="alert alert-danger" th:if="${errorMsg != null}">
+	                                    <strong>Failure! </strong>
+	                                    <div th:text="${errorMsg}"/>
+	                                </div>
+	                            </div>
+								<div class="card">
+									<div class="card-header">
+										<h3 class="card-title">Asset Management</h3>
+									</div>
+									<div class="card-body assetmanagement">
+										<div class="col-md-12 pt-3 pb-3" id="formContent">
+											<ul class="nav nav-tabs" id="nav-tab" role="tablist">
+												<li class="nav-item" role="presentation">
+													<button class="nav-link" th:classappend="${selectedTab == 'VIDEO'} ? ' active' : ''"  id="nav-video-tab" data-bs-toggle="tab" data-bs-target="#nav-video" role="tab" aria-controls="nav-video" aria-selected="true">Video Upload</button>
+												</li>
+												<li class="nav-item" role="presentation">
+													<button class="nav-link" th:classappend="${selectedTab == 'IMAGE'} ? ' active' : ''" id="nav-image-tab" data-bs-toggle="tab" data-bs-target="#nav-image" role="tab" aria-controls="nav-image" aria-selected="false">Image Upload</button>
+												</li>
+											</ul>
+											<div class="tab-content" id="nav-tabContent">
+												<div class="tab-pane fade " th:classappend="${selectedTab == 'VIDEO'} ? 'show active' : ''"  id="nav-video"
+													role="tabpanel" aria-labelledby="nav-video-tab">
+													<form action="#" method="post" id="videoForm" class="text-left p-3" data-th-action="@{/notification/asset.html}" th:object="${asset}" enctype="multipart/form-data">
+														<div class="form-group videourl">
+															<label class="fieldtitle pb-1">
+																Choose File <span class="size">(Preferred dimension 426 x 240)</span>
+															</label>
+															<input th:field="*{file}" type="file" name="file" class="form-control"	id="fileVideo" required>
+															<input  name="assetType" type="hidden"  th:value="${videoAssetSignature}">
+														</div>
+														<ul class="list-group">
+															<li th:each="video: ${videoAssets}" class="list-group-item">
+																<div class="list-item-content">
+																	<video class="video" th:src="${video.url}"  controls controlsList="nodownload">Video tag not supported</video>
+																</div>
+																<div class="list-item-title" th:title="${video.url}" th:text="${video.name}">Wildlife.mp4</div>
+																<a href="#" th:href="@{/notification/asset/delete.html(id=${video.id} , tab='VIDEO')}" >
+																	<i class="fa fa-trash"></i>
+																</a>
+																
+															</li>
+														</ul>
+														<div class="form-group text-right pt-3 mb-0">
+															<input type="reset" class="btn btn-danger" value="Reset">
+															<input type="submit" value="Upload Video" class="btn btn-primary" name="upd">
+														</div>
+													</form>
+												</div>
+												<div class="tab-pane fade" th:classappend="${selectedTab == 'IMAGE'} ? 'show active' : ''" id="nav-image" role="tabpanel"
+													aria-labelledby="nav-image-tab">
+													<form method="post" id="imageForm" class="text-left p-3" data-th-action="@{/notification/asset.html}" th:object="${asset}" enctype="multipart/form-data">
+														<div class="form-group videourl">
+															<label class="fieldtitle pb-1">
+																Choose File <span class="size">(Preferred dimension 300 x 250)</span>
+															</label>
+															<input th:field="*{file}" type="file" name="file" class="form-control"	id="fileImage" required>
+															<input  name="assetType" type="hidden"  th:value="${imageAssetSignature}">
+														</div>
+														<ul class="list-group">
+															<li th:each="image: ${imageAssets}" class="list-group-item">
+																<div class="list-item-content">
+																	<img th:src="${image.url}"	th:alt="${image.name}">
+																</div>
+																<div class="list-item-title" th:title="${image.url}" th:text="${image.name}">sample.jpg</div>
+																<a href="#" th:href="@{/notification/asset/delete.html(id=${image.id} , tab='IMAGE')}">
+																	<i class="fa fa-trash"></i>
+																</a>
+															</li>
+														</ul>
+														<div class="form-group text-right pt-3 mb-0">
+															<input type="reset" class="btn btn-danger" value="Reset">
+															<button type="submit" value="" class="btn btn-primary" name="submit">Upload Image</button>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<div th:replace="fragments/footer :: footer"></div>
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<div class="modal fade confirm-delete" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body">Are you sure to delete this asset?</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
+					<a class="btn btn-danger btn-ok" style="color: #ffffff;">Delete</a>
+				</div>
+			</div>
+		</div>
+	</div>
+<style type="text/css">
+.assetmanagement .nav-tabs {
+	border-bottom: 0;
+	margin-bottom: -1px;
+}
+.assetmanagement .nav-link {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border: 2px !important;
+	color: #495057 !important;
+	background: none;
+}
+.assetmanagement .nav-link:hover, .assetmanagement .nav-link:focus {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	outline: none;
+}
+.assetmanagement .nav-link.active {
+	color: #ffffff !important;
+	font-weight: bold;
+	background: #007bff !important;
+}
+.assetmanagement .tab-content {
+	border: 2px solid #007bff;
+	border-radius: .25rem;
+}
+.assetmanagement .list-group {
+	width: 100%;
+	max-height: 364px;
+	display: block;
+	margin: 0;
+	padding: 8px 0;
+	text-align: center;
+	overflow: hidden;
+	overflow-y: auto;
+	border: 1px solid rgba(0, 0, 0, .125);
+	border-radius: .25rem;
+}
+.assetmanagement .list-group .list-group-item {
+	width: 18%;
+	height: 160px;
+	display: inline-block;
+	margin: 5px;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	border: 1px solid rgba(0, 0, 0, .125);
+	border-radius: 5px;
+}
+.assetmanagement .list-group .list-group-item .list-item-content {
+	width: 100%;
+	height: 130px;
+	background: #000;
+}
+.assetmanagement .list-group .list-group-item .list-item-content .video
+	{
+	width: 100%;
+	height: 130px;
+}
+.assetmanagement .list-group .list-group-item .list-item-content img {
+	width: 100%;
+	height: 130px;
+}
+.assetmanagement .list-group .list-group-item .list-item-title {
+	width: 83%;
+	float: left;
+	padding: 3px 5px 0 7px;
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.assetmanagement .list-group .list-group-item a {
+	width: 16%;
+	float: right;
+	margin-top: 2px;
+	color: #ff0000;
+	font-size: 19px;
+}
+</style>
+<div th:replace="fragments/common-scripts :: common-scripts"></div>
+</body>
+</html>

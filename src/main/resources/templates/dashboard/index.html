@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<title>Admin Portal</title>
+<!-- Head (all meta link scripts go here ) START -->
+<div th:replace="fragments/header :: header"></div>
+<!-- Head (all meta link scripts go here ) END -->
+<!-- ADD THE CLASS sidedar-collapse TO HIDE THE SIDEBAR PRIOR TO LOADING THE SITE -->
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper START-->
+<div class="wrapper">
+    <!-- TOP Menu (all meta link scripts go here ) START -->
+    <div th:replace="fragments/top-menu :: top-menu"></div>
+    <!-- TOP Menu (all meta link scripts go here ) END -->
+    <!-- Left side column. contains the sidebar START -->
+    <div th:replace="fragments/left-menu-panel :: left-menu-panel"></div>
+    <!-- Left side column. contains the sidebar END -->
+    <!-- Content Wrapper. Contains page content START -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) START-->
+        <!-- <div th:replace="fragments/maincontainheader :: maincontainheader"/>  TODO need to check 21-03-2020 -->
+        <!-- Content Header (Page header) END-->
+
+
+        <!--  ********  PLEASE DO NOT CHANGE ABOVE CODE ********* -->
+
+        <!-- Main content START  -->
+        <!--   ============ YOUR CODE WILL GO HERE =========== START -->
+        <div class="col-md-12">
+        	<h3 class="col-md-12">Welcome to Tournament Maker</h3>
+        </div>
+        <!--   ============ YOUR CODE WILL GO HERE =========== END-->
+        <!-- Main content END  -->
+
+
+        <!--  ********  PLEASE DO NOT CHANGE BELOW CODE ********* -->
+
+    </div>
+    <!-- Content Wrapper. Contains page content END -->
+
+    <!-- ===================##### Main contain goes here END ============================ -->
+
+    <!-- =============================================== -->
+    <!-- Footer START -->
+    <div th:replace="fragments/footer :: footer"></div>
+    <!-- Footer END -->
+    <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- Site wrapper END -->
+<!-- common script START -->
+<div th:replace="fragments/common-scripts :: common-scripts"></div>
+<!-- common script END -->
+
+
+</body>
+</html>

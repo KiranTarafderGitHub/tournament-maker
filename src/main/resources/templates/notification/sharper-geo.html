@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<title>Compose</title>
+<div th:replace="fragments/header :: header"></div>
+<style type="text/css">
+.card-title {
+	float: left;
+	font-weight: 400;
+	margin: 0;
+	text-transform: capitalize;
+}
+</style>
+<style type="text/css">
+.assetmanagement .nav-tabs {
+	border-bottom: 0;
+	margin-bottom: -1px;
+}
+.assetmanagement .nav-link {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border: 2px !important;
+	color: #495057 !important;
+}
+.assetmanagement .nav-link:hover, .assetmanagement .nav-link:focus {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	outline: none;
+}
+.assetmanagement .nav-link.active {
+	color: #ffffff !important;
+	font-weight: bold;
+	background: #007bff !important;
+}
+.assetmanagement .tab-content {
+	border: 2px solid #007bff;
+	border-radius: .25rem;
+}
+.assetmanagement .list-group {
+	width: 100%;
+	max-height: 364px;
+	display: block;
+	margin: 0;
+	padding: 8px 0;
+	text-align: center;
+	overflow: hidden;
+	overflow-y: auto;
+	border: 1px solid rgba(0, 0, 0, .125);
+	border-radius: .25rem;
+}
+.assetmanagement .list-group .list-group-item {
+	width: 18%;
+	height: 160px;
+	display: inline-block;
+	margin: 5px;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	border: 1px solid rgba(0, 0, 0, .125);
+	border-radius: 5px;
+}
+.assetmanagement .list-group .list-group-item .list-item-content {
+	width: 100%;
+	height: 130px;
+	background: #000;
+}
+.assetmanagement .list-group .list-group-item .list-item-content .video
+	{
+	width: 100%;
+	height: 130px;
+}
+.assetmanagement .list-group .list-group-item .list-item-content img {
+	width: 100%;
+	height: 130px;
+}
+.assetmanagement .list-group .list-group-item .list-item-title {
+	width: 83%;
+	float: left;
+	padding: 3px 5px 0 7px;
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.assetmanagement .list-group .list-group-item a {
+	width: 16%;
+	float: right;
+	margin-top: 2px;
+	color: #ff0000;
+	font-size: 19px;
+}
+</style>
+<body class="hold-transition sidebar-mini">
+	<!-- Site wrapper START-->
+	<div class="wrapper">
+		<!-- TOP Menu (all meta link scripts go here ) START -->
+		<div th:replace="fragments/top-menu :: top-menu"></div>
+		<!-- TOP Menu (all meta link scripts go here ) END -->
+		<!-- Left side column. contains the sidebar START -->
+		<div th:replace="fragments/left-menu-panel :: left-menu-panel"></div>
+		<!-- Left side column. contains the sidebar END -->
+		<!-- Content Wrapper. Contains page content START -->
+		<div class="content-wrapper">
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>Sharper Geo Notifications</h1>
+						</div>
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">Notification</a></li>
+								<li class="breadcrumb-item active">Sharper Geo</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+			<section class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="box-header">
+	                                <div class="alert alert-success" th:if="${successMsg != null}">
+	                                    <strong>Success! </strong>
+	                                    <div th:text="${successMsg}"/>
+	                                </div>
+	                                <div class="alert alert-warning" th:if="${warningMessage != null}">
+	                                    <strong>Warning! </strong>
+	                                    <div th:text="${warningMessage}"/>
+	                                </div>
+	                                <div class="alert alert-danger" th:if="${errorMsg != null}">
+	                                    <strong>Failure! </strong>
+	                                    <div th:text="${errorMsg}"/>
+	                                </div>
+	                            </div>
+	                            <!-- /.box-header -->
+								<div class="card">
+									<!--  -->
+									<form action="#" method="post" id="notificationForm" data-th-action="@{/notification/sharper-geo.html}" th:object="${postNotificationBean}" enctype="multipart/form-data">
+
+										<div class="card-header">
+											<h3 class="card-title">Sharper Geo Notification</h3>
+										</div>
+										<div class="card-body pt-4 pb-4" style="min-height: 370px;">
+											<div class="row">
+											
+												<div class="col-sm-12">
+													<div class="row form-group">
+														<label for="city" class="col-sm-4 control-label text-right">Select Hotel</label> 
+														<select 
+															 id="hotelSelect"
+															 name="hotelIdSubmit"
+															class="col-sm-4 form-control" required>
+															<option  value="" disabled selected> - Select Hotel - </option>
+															<span th:each="hotel : ${hotels}" th:remove="tag">
+																<option th:attr="hotel-id=${hotel.id}" th:text="${hotel.name}" th:value="${hotel.id}"></option>
+														    </span>
+														</select>
+													</div>
+												</div>
+												
+												<div class="col-sm-12" id="divNotificationType">
+													<div class="row form-group">
+														<label for="city" class="col-sm-4 control-label text-right">Notification Type:</label> 
+														<select 
+															name="hotelNTSubmit"
+															id="notificationType" class="col-sm-4 form-control" required>
+															<option value="TEXT">TEXT</option>
+															<option value="IMAGE">IMAGE</option>
+															<option value="VIDEO">VIDEO</option>
+														</select>
+													</div>
+												</div>
+												
+												
+
+												<div class="col-sm-12" id="divTitle">
+													<div class="row form-group ntype notificationtitle">
+														<label for="notificationtitle"
+															class="col-sm-4 control-label text-right">Notification
+															Title</label> 
+															<input name="hotelNTitleSubmit"  type="text"
+															id="notificationtitle" maxlength="90"
+															class="col-sm-4 form-control" value="" required>
+													</div>
+												</div>
+												<div class="col-sm-12" id="divDescription">
+													<div class="row form-group ntype description">
+														<label for="description"
+															class="col-sm-4 control-label text-right">Description</label>
+														<textarea name="hotelNDesSubmit"
+															class="col-sm-4 form-control" id="description"></textarea>
+													</div>
+												</div>
+												<div class="col-sm-12" id="divUrl">
+													<div class="row form-group ntype contentUrl">
+														<label for="contentUrl"
+															class="col-sm-4 control-label text-right">Image/Video Url
+															</label> 
+															<input name="hotelNClinkSubmit" type="text" class="col-sm-4 form-control" value="" id="contentUrl">
+													</div>
+												</div>
+												
+											</div>
+										</div>
+										<div class="card-footer">
+											<input type="reset" class="btn btn-danger" value="Reset">
+											<button type="submit" id="btnSubmit"
+												class="btn btn-primary pull-right">Submit</button>
+
+										</div>
+									</form>
+									
+									<form action="#" method="post" id="sharperGeoForm" data-th-action="@{/notification/sharper-geo.html}"  >
+										<input type="hidden" id="hotelListSubmit">
+									</form>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<div th:replace="fragments/footer :: footer"></div>
+		<div class="control-sidebar-bg"></div>
+	</div>
+
+	<div th:replace="fragments/common-scripts :: common-scripts"></div>
+
+<script th:inline="javascript">
+var templateJson;
+/*<![CDATA[*/
+    templateJson = /*[[${template}]]*/ '';
+/*]]>*/
+</script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	
+	var jsonObject = templateJson;
+	console.log(jsonObject);
+	var hotelList = jsonObject.hotels;
+	
+	
+	$('#hotelSelect').on('change', function() {
+		
+		var hotelId = $(this).find('option:selected').attr("hotel-id");
+		
+		var hotelFound = false;
+		$.each(hotelList, function(key,value) {
+			  console.log(value.id);
+			  if(hotelId == value.id)
+			  {
+				  hotelFound = true;
+				  var notification = value.notification;
+				  var type = notification.type;
+				  var title = notification.title;
+				  var description = notification.description;
+				  var contentUrl = notification.contentUrl;
+				  
+				  $('#notificationType').val(type).change();
+				  $('#notificationtitle').val(title);
+				  $('#description').text(description);
+				  $('#contentUrl').val(contentUrl);
+			  }
+		});
+		
+		if(!hotelFound )
+		{
+			  $('#notificationtitle').val("");
+			  $('#description').text("");
+			  $('#contentUrl').val("");
+		}
+	});
+
+	/* $('#btnSubmit').click(function(){
+		
+		  var hotelId = $(this).find('option:selected').attr("hotel-id");
+		  var type = $('#notificationType').find('option:selected').val();
+		  var title = $('#notificationtitle').val();
+		  var description = $('#description').text();
+		  console.log("description: " + description);
+		  var contentUrl = $('#contentUrl').val();
+		  
+		  if( hotelId == "")
+		  {
+			  alert("please select an hotel");
+			  return;
+		  }
+		  
+		  var sharperGeoTemplate = {};
+		  
+		  $.each(hotelList, function(key,value) {
+			  console.log(value.id);
+			  if(hotelId == value.id)
+			  {
+				  var notification = value.notification;
+				  notification.type = type;
+				  notification.title = title;
+				  notification.description = description;
+				  notification.contentUrl = contentUrl;
+				  
+				  sharperGeoTemplate.hotels[key] = value; 
+				  sharperGeoTemplate.hotels[key].notification = notification; 
+			  }
+			  else
+			  {
+				  sharperGeoTemplate.hotels[key] = value; 
+			  }
+		  });
+		  
+		  //var hotelListSubmit = JSON.stringify(hotelList);
+		
+		  $('#hotelListSubmit').val( JSON.stringify(sharperGeoTemplate));
+		  $('#sharperGeoForm').submit();
+		  
+		  
+	}); */
+	
+	//notificationType  chooseImageDiv chooseVideoDiv images videos contentUrl
+});
+
+
+</script>
+</body>
+</html>

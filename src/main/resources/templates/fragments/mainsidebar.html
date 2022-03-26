@@ -1,0 +1,38 @@
+<!-- sidebar: style can be found in sidebar.less -->
+<section class="sidebar" th:fragment="sidebar">
+    <!-- sidebar menu: : style can be found in sidebar.less -->
+    <ul class="sidebar-menu">
+        <li class="active treeview">
+            <a href="#">
+                <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-folder"></i>
+                <span>Registration</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li><a href="/customers/add"><i class="fa fa-circle-o"></i> Add Customers</a></li>
+            </ul>
+            <ul class="treeview-menu">
+                <li><a href="/customers"><i class="fa fa-circle-o"></i> List Customers</a></li>
+            </ul>
+        </li>
+        
+        <li th:class="treeview" sec:authorize="hasAnyAuthority('profile.user.menu.list','profile.user.menu.add','profile.user.role.menu.list','profile.user.role.menu.add','profile.user.menu.permission')">
+		        <a href="#">
+		            <i class="fa fa-user"></i> <span>User Management</span>  <i class="fa fa-angle-left pull-right"></i>
+		        </a>
+		        <ul class="treeview-menu">
+		                <li sec:authorize="hasAuthority('profile.user.menu.list')">         <a href="/profile-user-list.html">                     <i class="fa fa-circle-o"></i> All User</a></li>
+		                <li sec:authorize="hasAuthority('profile.user.menu.add')">          <a href="/profile-user-add.html">                      <i class="fa fa-circle-o"></i> Add User</a></li>
+		                <li sec:authorize="hasAuthority('profile.user.role.menu.list')">    <a href="/profile-role-list.html">                     <i class="fa fa-circle-o"></i> All Role</a></li>
+		                <li sec:authorize="hasAuthority('profile.user.role.menu.add')">     <a href="/profile-role-add.html">                      <i class="fa fa-circle-o"></i> Add Role</a></li>
+		                <li sec:authorize="hasAuthority('profile.user.menu.permission')">   <a href="/profile-permission-list.html">               <i class="fa fa-circle-o"></i> All Permission</a></li>
+		        </ul>
+	    </li>
+    </ul>
+</section>
+<!-- /.sidebar -->

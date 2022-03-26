@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title th:text="${title}">Dashboard</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link rel="shortcut icon" th:href="@{/resources/images/favicon.png}"/>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <!-- Font Awesome -->
+  	<!--link rel="stylesheet" th:href="@{/resources/plugins/fontawesome-free/css/all.min.css}"-->
+    <link rel="stylesheet" th:href="@{/resources/plugins/font-awesome/css/font-awesome.min.css}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- jQuery UI --> 
+    <link rel="stylesheet" th:href="@{/resources/plugins/jquery/jquery-ui.css}" />
+    <!-- DataTables -->
+    <link rel="stylesheet" th:href="@{/resources/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css}">
+    <link rel="stylesheet" th:href="@{/resources/plugins/datatables-responsive/css/responsive.bootstrap4.min.css}">
+    <!-- SweetAlert2 -->
+	<link rel="stylesheet" th:href="@{/resources/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css}">
+	<!-- Toastr -->
+	<link rel="stylesheet" th:href="@{/resources/plugins/toastr/toastr.min.css}">
+    <!-- iCheck -->
+    <link rel="stylesheet" th:href="@{/resources/plugins/iCheck/flat/blue.css}">
+    <!-- Morris chart -->
+    <link rel="stylesheet" th:href="@{/resources/plugins/morris/morris.css}">
+    <!-- jvectormap -->
+    <link rel="stylesheet" th:href="@{/resources/plugins/jvectormap/jquery-jvectormap-1.2.2.css}">
+    <!-- Date Picker -->
+    <link rel="stylesheet" th:href="@{/resources/plugins/datepicker/datepicker3.css}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" th:href="@{/resources/plugins/daterangepicker/daterangepicker-bs3.css}">
+    <!-- Datetime picker -->
+    <link rel="stylesheet" th:href="@{/resources/plugins/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css}">
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link rel="stylesheet" th:href="@{/resources/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css}">
+    <!-- bootstrap switch -->
+    <link rel="stylesheet" th:href="@{/resources/plugins/bootstrap-switch/css/bootstrap3/bootstrap-switch.css}">
+	<!-- bootstrap duallistbox-->
+    <link rel="stylesheet" th:href="@{/resources/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.css}"/>
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!--link rel="stylesheet" th:href="@{/resources/plugins/jquery-datatables/jquery.dataTables.min.css}"-->
+    <link rel="stylesheet" th:href="@{/resources/css/onlinepay.css}">
+    <link rel="stylesheet" th:href="@{/resources/plugins/bootstrap/css/bootstrap-multiselect.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/resources/dist/css/adminlte.css}">
+    <link rel="stylesheet" th:href="@{/resources/dist/css/custom.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" integrity="sha512-63+XcK3ZAZFBhAVZ4irKWe9eorFG0qYsy2CaM5Z+F3kUn76ukznN0cp4SArgItSbDFD1RrrWgVMBY9C/2ZoURA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+</html>

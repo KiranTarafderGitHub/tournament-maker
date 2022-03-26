@@ -1,0 +1,36 @@
+#page-wrap-payslip { width: 700px; margin: 0 auto; }
+.tableClassPayslip { border-collapse: collapse; }
+.tableClassPayslip td, table th { border: 1px solid black; padding: 2px; }
+
+#itemsPayslip { clear: both; width: 100%; margin: 20px 0 0 0; border: 1px solid black; }
+#itemsPayslip td.blank { border: 0; text-align: left;}
+#itemsPayslip td.total-line { border-right: 0; text-align: right; }
+@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+
+@page {
+    size: auto;   /* auto is the initial value */
+    margin: 0;  /* this affects the margin in the printer settings */
+}
+
+
+.customSearchBorder {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.customSearchHolder {
+    height: 65px !important;
+}
+
+.customSearchLabel {
+    margin-bottom: -50px;
+    padding-left: 5px;
+    padding-top: 2px;
+    position: absolute;
+}
