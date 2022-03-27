@@ -8,22 +8,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HomeController {
-	
-private static final Log log = LogFactory.getLog(HomeController.class);
-    
-    @GetMapping("/")
-    public ModelAndView landing(ModelAndView model)
-    {
-        try
-        {
-           
-        }
-        catch (Exception e)
-        {
-            log.error(e.getMessage(),e);
-        }
-        model.setViewName("dashboard/index");
-        
-        return model;
-    }
+
+	private static final Log log = LogFactory.getLog(HomeController.class);
+
+	@GetMapping("/")
+	public ModelAndView landing(ModelAndView model) {
+		try {
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		model.setViewName("dashboard/index");
+
+		return model;
+	}
 }

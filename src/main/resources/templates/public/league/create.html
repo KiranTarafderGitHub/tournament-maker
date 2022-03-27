@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<title>Compose</title>
+<div th:replace="fragments/header :: header"></div>
+<style type="text/css">
+.card-title {
+	float: left;
+	font-weight: 400;
+	margin: 0;
+	text-transform: capitalize;
+}
+</style>
+<style type="text/css">
+.assetmanagement .nav-tabs {
+	border-bottom: 0;
+	margin-bottom: -1px;
+}
+.assetmanagement .nav-link {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border: 2px !important;
+	color: #495057 !important;
+}
+.assetmanagement .nav-link:hover, .assetmanagement .nav-link:focus {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	outline: none;
+}
+.assetmanagement .nav-link.active {
+	color: #ffffff !important;
+	font-weight: bold;
+	background: #007bff !important;
+}
+.assetmanagement .tab-content {
+	border: 2px solid #007bff;
+	border-radius: .25rem;
+}
+.assetmanagement .list-group {
+	width: 100%;
+	max-height: 364px;
+	display: block;
+	margin: 0;
+	padding: 8px 0;
+	text-align: center;
+	overflow: hidden;
+	overflow-y: auto;
+	border: 1px solid rgba(0, 0, 0, .125);
+	border-radius: .25rem;
+}
+.assetmanagement .list-group .list-group-item {
+	width: 18%;
+	height: 160px;
+	display: inline-block;
+	margin: 5px;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	border: 1px solid rgba(0, 0, 0, .125);
+	border-radius: 5px;
+}
+.assetmanagement .list-group .list-group-item .list-item-content {
+	width: 100%;
+	height: 130px;
+	background: #000;
+}
+.assetmanagement .list-group .list-group-item .list-item-content .video
+	{
+	width: 100%;
+	height: 130px;
+}
+.assetmanagement .list-group .list-group-item .list-item-content img {
+	width: 100%;
+	height: 130px;
+}
+.assetmanagement .list-group .list-group-item .list-item-title {
+	width: 83%;
+	float: left;
+	padding: 3px 5px 0 7px;
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.assetmanagement .list-group .list-group-item a {
+	width: 16%;
+	float: right;
+	margin-top: 2px;
+	color: #ff0000;
+	font-size: 19px;
+}
+</style>
+<body class="hold-transition sidebar-mini">
+	<!-- Site wrapper START-->
+	<div class="wrapper">
+		<!-- TOP Menu (all meta link scripts go here ) START -->
+		<div th:replace="fragments/top-menu :: top-menu"></div>
+		<!-- TOP Menu (all meta link scripts go here ) END -->
+		<!-- Left side column. contains the sidebar START -->
+		<div th:replace="fragments/left-menu-panel :: left-menu-panel"></div>
+		<!-- Left side column. contains the sidebar END -->
+		<!-- Content Wrapper. Contains page content START -->
+		<div class="content-wrapper">
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>League</h1>
+						</div>
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">League</a></li>
+								<li class="breadcrumb-item active">Create</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+			<section class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="box-header">
+	                                <div class="alert alert-success" th:if="${successMsg != null}">
+	                                    <strong>Success! </strong>
+	                                    <div th:text="${successMsg}"/>
+	                                </div>
+	                                <div class="alert alert-warning" th:if="${warningMessage != null}">
+	                                    <strong>Warning! </strong>
+	                                    <div th:text="${warningMessage}"/>
+	                                </div>
+	                                <div class="alert alert-danger" th:if="${errorMsg != null}">
+	                                    <strong>Failure! </strong>
+	                                    <div th:text="${errorMsg}"/>
+	                                </div>
+	                            </div>
+	                            <!-- /.box-header -->
+								<div class="card">
+									<!--  -->
+									<form action="#" method="post" id="notificationForm" data-th-action="@{/notification/create.html}" th:object="${postNotificationBean}" enctype="multipart/form-data">
+
+										<div class="card-header">
+											<h3 class="card-title">Create Notification</h3>
+										</div>
+										<div class="card-body pt-4 pb-4" style="min-height: 370px;">
+											<div class="row">
+											
+												<div class="col-sm-12">
+													<div class="row form-group">
+														<label for="city" class="col-sm-4 control-label text-right">Promotion Type:</label> 
+														<select 
+															th:field="*{purposeCode}" id="purposeSelect"
+															class="col-sm-4 form-control" required>
+															<option  value="" disabled selected> - Select Purpose - </option>
+															<span th:each="purpose : ${purposeList}" th:remove="tag">
+																<option th:attr="purpose-id=${purpose.id}" th:text="${purpose.name}" th:value="${purpose.code}"></option>
+														    </span>
+														</select>
+													</div>
+												</div>
+												<input type="hidden" th:field="*{purposeId}" value="" id="purposeId">
+												
+												<div class="col-sm-12" id="divNotificationType">
+													<div class="row form-group">
+														<label for="city" class="col-sm-4 control-label text-right">Notification Type:</label> 
+														<select th:field="*{messageContentType}"
+															id="notificationType" class="col-sm-4 form-control" required>
+															<option selected value="TEXT">TEXT</option>
+															<option value="IMAGE">IMAGE</option>
+															<option value="VIDEO">VIDEO</option>
+														</select>
+													</div>
+												</div>
+												<div class="col-sm-12" id="divCity">
+													<div class="row form-group">
+														<label for="city"
+															class="col-sm-4 control-label text-right">City:</label>
+														<select
+															th:field="*{cityList}" id="city"
+															class="col-sm-4 form-control" multiple>
+															<option  value="" selected>ALL</option>
+															<span th:each="city : ${cityList}" th:remove="tag">
+																<option th:text="${city}" th:value="${city}"></option>
+														    </span>
+														</select>
+													</div>
+												</div>
+												<div class="col-sm-12" id="divSendNow">
+													<div class="row form-group">
+														<label for="sendnow"
+															class="col-sm-4 control-label text-right">Send
+															Now:</label>
+														<div class="col-sm-4 pl-0">
+															<input th:field="*{sendNow}" id="sendNow" class="mt-1"
+																type="checkbox" checked>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-12" id="divSendLater">
+													<div class="row form-group">
+														<label for="birthdaytime"
+															class="col-sm-4 control-label text-right">Send
+															Later:</label> 
+															<input th:field="*{sendLaterDateTime}" type="text" value="" autocomplete="off" id="sendLater" data-date-format="yyyy-mm-dd hh:ii">
+															
+													</div>
+												</div>
+
+												<div class="col-sm-12" id="divTitle">
+													<div class="row form-group ntype notificationtitle">
+														<label for="notificationtitle"
+															class="col-sm-4 control-label text-right">Notification
+															Title</label> <input th:field="*{title}" type="text"
+															id="notificationtitle" maxlength="90"
+															class="col-sm-4 form-control" value="" required>
+													</div>
+												</div>
+												<div class="col-sm-12" id="divDescription">
+													<div class="row form-group ntype description">
+														<label for="description"
+															class="col-sm-4 control-label text-right">Description</label>
+														<textarea th:field="*{message}"
+															class="col-sm-4 form-control" id="description"></textarea>
+													</div>
+												</div>
+												
+												
+												<div class="col-sm-12" id="divDescriptionStatic">
+													<div class="row form-group ntype description">
+														<label for="description"
+															class="col-sm-4 control-label text-right">Static Description</label>
+														<textarea th:field="*{staticMessage}"
+															class="col-sm-4 form-control" id="descriptionStatic" disabled></textarea>
+													</div>
+												</div>
+												
+												<div class="col-sm-12" id="divExcel">
+													<div class="row form-group ntype description">
+															<label for="excel" class="col-sm-4 control-label text-right">
+																Choose Excel  File <span class="size"></span>
+															</label>
+															<input th:field="*{excel}" type="file" name="excel" class="col-sm-4 form-control"	id="excel" >
+														</div>
+												</div>
+												
+												<!-- IMAGE  -->
+												<div id="chooseImageDiv" class="col-sm-12 assetmanagement">
+														<div class="form-group videourl">
+															<label class="fieldtitle pb-1">
+																Choose Image <span class="size">:</span>
+															</label>
+															
+														</div> 
+														<ul class="list-group">
+															<li th:each="image: ${imageAssets}" class="list-group-item">
+																<div class="list-item-content">
+																	<img th:src="${image.url}"	th:alt="${image.name}">
+																</div>
+																<div class="list-item-title" th:title="${image.url}" th:text="${image.name}">sample.jpg</div>
+																<input type="radio" name="images" th:value="${image.url}" >
+															</li>
+															
+														</ul>
+													</div>
+												<!-- IMAGE End -->
+												
+												<!-- VIDOE  -->
+												<div id="chooseVideoDiv" class="col-sm-12 assetmanagement">
+														<div class="form-group videourl">
+															<label class="fieldtitle pb-1">
+																Choose Video <span class="size">:</span>
+															</label>
+															
+														</div> 
+														<ul class="list-group">
+														    <li th:each="video: ${videoAssets}" class="list-group-item">
+																<div class="list-item-content">
+																	<video class="video" th:src="${video.url}"  controls controlsList="nodownload">Video tag not supported</video>
+																</div>
+																<div class="list-item-title" th:title="${video.url}" th:text="${video.name}">Wildlife.mp4</div>
+																<input type="radio" name="videos" th:value="${video.url}" >
+															</li>
+															
+															
+														</ul>
+													</div>
+												<!-- VIDEO End -->
+												<input type="hidden" th:field="*{url}" value="" id="contentUrl">
+											</div>
+										</div>
+										<div class="card-footer">
+											<input type="reset" class="btn btn-danger" value="Reset">
+											<button type="submit" id="btnSubmit"
+												class="btn btn-primary pull-right">Submit</button>
+
+										</div>
+									</form>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<div th:replace="fragments/footer :: footer"></div>
+		<div class="control-sidebar-bg"></div>
+	</div>
+
+	<div th:replace="fragments/common-scripts :: common-scripts"></div>
+
+<script th:inline="javascript">
+var templateList = [];
+/*<![CDATA[*/
+    templateList = /*[[${templateList}]]*/ '';
+/*]]>*/
+</script>
+<script type="text/javascript">
+function renderTemplate( template )
+{
+	
+	template.notificationType ? $('#divNotificationType').show() : $('#divNotificationType').hide();
+	template.city ? $('#divCity').show() : $('#divCity').hide();
+	template.sendNow ? $('#divSendNow').show() : $('#divSendNow').hide();
+	template.sendLater ? $('#divSendLater').show() : $('#divSendLater').hide();
+	template.title ? $('#divTitle').show() : $('#divTitle').hide();
+	template.description ? $('#divDescription').show() : $('#divDescription').hide();
+	template.descriptionStatic ? $('#divDescriptionStatic').show() : $('#divDescriptionStatic').hide();
+	template.excelData ? $('#divExcel').show() : $('#divExcel').hide();	
+	
+	$('#purposeId').val(template.purposeId);
+	$('#descriptionStatic').text(template.descriptionStaticText);
+
+}
+
+var templateMap = new Map();
+$(document).ready(function(){
+	
+
+	console.log(templateList);
+	
+	if(templateList.length > 0)
+	{
+		templateList.forEach(function(value){
+			var templateObj = value;
+			templateMap.set(templateObj.purposeId, templateObj);
+		});
+	}		
+	//handle the default selected purpose
+	console.log(templateMap);
+	
+	var selectedPurpose = $('#purposeSelect').find('option:selected').attr("purpose-id");
+	console.log("default selected purpose: " + selectedPurpose);
+	var defaultTemplateObject;
+	if(templateMap.has( selectedPurpose ))
+	{
+		defaultTemplateObject = templateMap.get( selectedPurpose );
+	}
+	else
+	{
+		defaultTemplateObject = templateMap.get("0");
+	}
+	renderTemplate( defaultTemplateObject );
+	
+	
+	$('#purposeSelect').on('change', function() {
+		
+		var purposeId = $(this).find('option:selected').attr("purpose-id");
+		console.log("Selected Purpose Id: " + purposeId);
+		var template;
+		
+		if(templateMap.has(purposeId))
+		{
+			template = templateMap.get(purposeId);
+		}
+		else
+		{
+			template = templateMap.get("0");
+		}
+		renderTemplate( template );
+		
+	});
+	
+	$("#sendLater").datetimepicker({
+		    format: 'yyyy-mm-dd hh:ii',
+			autoclose: true,
+	        todayBtn: true,
+	        minuteStep: 05	
+	});
+	
+	
+	$('#chooseVideoDiv').hide();
+	$('#chooseImageDiv').hide();
+	
+	
+	$('#sendNow').click(function(){
+		$("#sendLater").val("");
+	});
+	
+	$('#sendLater').click(function(){
+		$('#sendNow').prop('checked', false); // Unchecks it
+	});
+	
+	$('#notificationType').on('change', function() {
+		
+		$('#contentUrl').val("");
+		
+		if(this.value == "IMAGE")
+		{
+			$('#chooseVideoDiv').fadeOut();
+			$('#chooseImageDiv').fadeIn();
+			
+		}
+		else if(this.value == "VIDEO")
+		{
+			$('#chooseImageDiv').fadeOut();
+			$('#chooseVideoDiv').fadeIn();
+		}
+		else
+		{
+			$('#chooseVideoDiv').fadeOut();
+			$('#chooseImageDiv').fadeOut();
+		}
+		  
+	});
+	
+	$("input[name='images']").change(function(){
+	    // Do something interesting here
+	    console.log(this.value);
+		$('#contentUrl').val(this.value);
+	});
+	
+	$("input[name='videos']").change(function(){
+	    // Do something interesting here
+	    console.log(this.value);
+		$('#contentUrl').val(this.value);
+	});
+	
+	//notificationType  chooseImageDiv chooseVideoDiv images videos contentUrl
+});
+
+
+</script>
+</body>
+</html>
