@@ -139,162 +139,61 @@
 	                            <!-- /.box-header -->
 								<div class="card">
 									<!--  -->
-									<form action="#" method="post" id="notificationForm" data-th-action="@{/notification/create.html}" th:object="${postNotificationBean}" enctype="multipart/form-data">
+									<form th:object="${tournament}" action="#" method="post" id="tournamentForm" data-th-action="@{/public/league/create.html}"  >
 
 										<div class="card-header">
-											<h3 class="card-title">Create Notification</h3>
+											<h3 class="card-title">Create Tournament</h3>
 										</div>
 										<div class="card-body pt-4 pb-4" style="min-height: 370px;">
 											<div class="row">
 											
+												<div class="col-sm-12" id="">
+													<div class="row form-group ntype description">
+															<label for="name" class="col-sm-4 control-label text-right">
+																Tournament Name <span class="size"></span>
+															</label>
+															<input th:field="*{name}" type="text" name="name" class="col-sm-4 form-control" required>
+														</div>
+												</div>
 												<div class="col-sm-12">
 													<div class="row form-group">
-														<label for="city" class="col-sm-4 control-label text-right">Promotion Type:</label> 
-														<select 
+														<label for="city" class="col-sm-4 control-label text-right">Tournament Type:</label> 
+														<!-- <select 
 															th:field="*{purposeCode}" id="purposeSelect"
 															class="col-sm-4 form-control" required>
 															<option  value="" disabled selected> - Select Purpose - </option>
 															<span th:each="purpose : ${purposeList}" th:remove="tag">
 																<option th:attr="purpose-id=${purpose.id}" th:text="${purpose.name}" th:value="${purpose.code}"></option>
 														    </span>
+														</select> -->
+														<select id='tournamentTypeSelect' th:field="*{tournamentType}" required>
+															<option  value=""  selected style="display:none;" > - Select Type - </option>
+															<option th:each="tournamentType : ${T(com.kiran.league.maker.persist.entity.TournamentType).values()}" th:value="${tournamentType}" th:text="${tournamentType.getDisplayName()}"></option>
 														</select>
 													</div>
 												</div>
-												<input type="hidden" th:field="*{purposeId}" value="" id="purposeId">
-												
-												<div class="col-sm-12" id="divNotificationType">
-													<div class="row form-group">
-														<label for="city" class="col-sm-4 control-label text-right">Notification Type:</label> 
-														<select th:field="*{messageContentType}"
-															id="notificationType" class="col-sm-4 form-control" required>
-															<option selected value="TEXT">TEXT</option>
-															<option value="IMAGE">IMAGE</option>
-															<option value="VIDEO">VIDEO</option>
-														</select>
-													</div>
-												</div>
-												<div class="col-sm-12" id="divCity">
-													<div class="row form-group">
-														<label for="city"
-															class="col-sm-4 control-label text-right">City:</label>
-														<select
-															th:field="*{cityList}" id="city"
-															class="col-sm-4 form-control" multiple>
-															<option  value="" selected>ALL</option>
-															<span th:each="city : ${cityList}" th:remove="tag">
-																<option th:text="${city}" th:value="${city}"></option>
-														    </span>
-														</select>
-													</div>
-												</div>
-												<div class="col-sm-12" id="divSendNow">
-													<div class="row form-group">
-														<label for="sendnow"
-															class="col-sm-4 control-label text-right">Send
-															Now:</label>
-														<div class="col-sm-4 pl-0">
-															<input th:field="*{sendNow}" id="sendNow" class="mt-1"
-																type="checkbox" checked>
-														</div>
-													</div>
-												</div>
-												<div class="col-sm-12" id="divSendLater">
-													<div class="row form-group">
-														<label for="birthdaytime"
-															class="col-sm-4 control-label text-right">Send
-															Later:</label> 
-															<input th:field="*{sendLaterDateTime}" type="text" value="" autocomplete="off" id="sendLater" data-date-format="yyyy-mm-dd hh:ii">
-															
-													</div>
-												</div>
-
-												<div class="col-sm-12" id="divTitle">
-													<div class="row form-group ntype notificationtitle">
-														<label for="notificationtitle"
-															class="col-sm-4 control-label text-right">Notification
-															Title</label> <input th:field="*{title}" type="text"
-															id="notificationtitle" maxlength="90"
-															class="col-sm-4 form-control" value="" required>
-													</div>
-												</div>
-												<div class="col-sm-12" id="divDescription">
+												<div class="col-sm-12" id="">
 													<div class="row form-group ntype description">
-														<label for="description"
-															class="col-sm-4 control-label text-right">Description</label>
-														<textarea th:field="*{message}"
-															class="col-sm-4 form-control" id="description"></textarea>
+														<label for="teams"
+															class="col-sm-4 control-label text-right">Teams</label>
+														<textarea th:field="*{teams}" 
+															class="col-sm-4 form-control" id="teams" placeholder="Enter one player/team per line"></textarea>
 													</div>
 												</div>
-												
-												
-												<div class="col-sm-12" id="divDescriptionStatic">
+												<div class="col-sm-12" id="">
 													<div class="row form-group ntype description">
-														<label for="description"
-															class="col-sm-4 control-label text-right">Static Description</label>
-														<textarea th:field="*{staticMessage}"
-															class="col-sm-4 form-control" id="descriptionStatic" disabled></textarea>
-													</div>
-												</div>
-												
-												<div class="col-sm-12" id="divExcel">
-													<div class="row form-group ntype description">
-															<label for="excel" class="col-sm-4 control-label text-right">
-																Choose Excel  File <span class="size"></span>
+															<label for="email" class="col-sm-4 control-label text-right">
+																Admin Email <span class="size"></span>
 															</label>
-															<input th:field="*{excel}" type="file" name="excel" class="col-sm-4 form-control"	id="excel" >
+															<input th:field="*{email}"  type="text" name="email" class="col-sm-4 form-control" placeholder="Optional">
 														</div>
 												</div>
-												
-												<!-- IMAGE  -->
-												<div id="chooseImageDiv" class="col-sm-12 assetmanagement">
-														<div class="form-group videourl">
-															<label class="fieldtitle pb-1">
-																Choose Image <span class="size">:</span>
-															</label>
-															
-														</div> 
-														<ul class="list-group">
-															<li th:each="image: ${imageAssets}" class="list-group-item">
-																<div class="list-item-content">
-																	<img th:src="${image.url}"	th:alt="${image.name}">
-																</div>
-																<div class="list-item-title" th:title="${image.url}" th:text="${image.name}">sample.jpg</div>
-																<input type="radio" name="images" th:value="${image.url}" >
-															</li>
-															
-														</ul>
-													</div>
-												<!-- IMAGE End -->
-												
-												<!-- VIDOE  -->
-												<div id="chooseVideoDiv" class="col-sm-12 assetmanagement">
-														<div class="form-group videourl">
-															<label class="fieldtitle pb-1">
-																Choose Video <span class="size">:</span>
-															</label>
-															
-														</div> 
-														<ul class="list-group">
-														    <li th:each="video: ${videoAssets}" class="list-group-item">
-																<div class="list-item-content">
-																	<video class="video" th:src="${video.url}"  controls controlsList="nodownload">Video tag not supported</video>
-																</div>
-																<div class="list-item-title" th:title="${video.url}" th:text="${video.name}">Wildlife.mp4</div>
-																<input type="radio" name="videos" th:value="${video.url}" >
-															</li>
-															
-															
-														</ul>
-													</div>
-												<!-- VIDEO End -->
-												<input type="hidden" th:field="*{url}" value="" id="contentUrl">
 											</div>
 										</div>
 										<div class="card-footer">
 											<input type="reset" class="btn btn-danger" value="Reset">
 											<button type="submit" id="btnSubmit"
 												class="btn btn-primary pull-right">Submit</button>
-
 										</div>
 									</form>
 
@@ -314,7 +213,7 @@
 <script th:inline="javascript">
 var templateList = [];
 /*<![CDATA[*/
-    templateList = /*[[${templateList}]]*/ '';
+    //templateList = /*[[${templateList}]]*/ '';
 /*]]>*/
 </script>
 <script type="text/javascript">

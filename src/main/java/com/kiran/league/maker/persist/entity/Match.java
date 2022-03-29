@@ -45,7 +45,7 @@ public class Match {
 	public Match() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -159,5 +159,4 @@ public class Match {
 				+ teamBPenaltyPoint + "]";
 	}
 
-	
 }

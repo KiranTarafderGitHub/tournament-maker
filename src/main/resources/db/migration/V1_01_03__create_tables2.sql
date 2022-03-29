@@ -4,7 +4,8 @@ CREATE TABLE `tournament` (
   `id`                   int(11)        NOT NULL AUTO_INCREMENT,
   `code`                 varchar(50)   NOT NULL,
   `name`                 varchar(150)   NOT NULL,
-  `tournament_type`      varchar(150)   NULL,  
+  `tournament_type`      varchar(150)   NULL, 
+  `admin_email`			 varchar(150)   NULL, 
   
   PRIMARY KEY (`id`),
   UNIQUE (`code`)

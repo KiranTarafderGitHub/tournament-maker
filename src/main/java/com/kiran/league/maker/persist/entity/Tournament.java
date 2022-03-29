@@ -19,6 +19,8 @@ public class Tournament {
 	private String name;
 
 	private String tournamentType;
+	
+	private String adminEmail;
 
 	public Tournament() {
 		// TODO Auto-generated constructor stub
@@ -56,10 +58,19 @@ public class Tournament {
 		this.tournamentType = tournamentType;
 	}
 
+	
+	public String getAdminEmail() {
+		return adminEmail;
+	}
+
+	public void setAdminEmail(String adminEmail) {
+		this.adminEmail = adminEmail;
+	}
+
 	@Override
 	public String toString() {
 		return "Tournament [id=" + id + ", code=" + code + ", name=" + name + ", tournamentType=" + tournamentType
-				+ "]";
+				+ ", adminEmail=" + adminEmail + "]";
 	}
 	
 }

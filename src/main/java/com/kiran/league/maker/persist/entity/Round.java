@@ -17,12 +17,12 @@ public class Round {
 
 	private String name;
 
+	@ManyToOne
+	private Tournament tournament;
+	
 	public Round() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	@ManyToOne
-	private Tournament tournament;
 
 	public Long getId() {
 		return id;
