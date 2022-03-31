@@ -14,7 +14,7 @@ import javax.persistence.Table;
 public class Match {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@OneToOne
@@ -22,25 +22,25 @@ public class Match {
 
 	private Date matchDate;
 
-	private Long teamA;
+	private Long teamHome;
 
-	private Long teamB;
+	private Long teamAway;
 
-	private Integer teamAScore;
+	private Integer teamHomeScore;
 
-	private Integer teamBScore;
+	private Integer teamAwayScore;
 
-	private Integer teamAPoint;
+	private Integer teamHomePoint;
 
-	private Integer teamBPoint;
+	private Integer teamAwayPoint;
 
-	private Integer teamABonusPoint;
+	private Integer teamHomeBonusPoint;
 
-	private Integer teamBBonusPoint;
+	private Integer teamAwayBonusPoint;
 
-	private Integer teamAPenaltyPoint;
+	private Integer teamHomePenaltyPoint;
 
-	private Integer teamBPenaltyPoint;
+	private Integer teamAwayPenaltyPoint;
 
 	public Match() {
 		// TODO Auto-generated constructor stub
@@ -70,93 +70,94 @@ public class Match {
 		this.matchDate = matchDate;
 	}
 
-	public Long getTeamA() {
-		return teamA;
+	public Long getTeamHome() {
+		return teamHome;
 	}
 
-	public void setTeamA(Long teamA) {
-		this.teamA = teamA;
+	public void setTeamHome(Long teamHome) {
+		this.teamHome = teamHome;
 	}
 
-	public Long getTeamB() {
-		return teamB;
+	public Long getTeamAway() {
+		return teamAway;
 	}
 
-	public void setTeamB(Long teamB) {
-		this.teamB = teamB;
+	public void setTeamAway(Long teamAway) {
+		this.teamAway = teamAway;
 	}
 
-	public Integer getTeamAScore() {
-		return teamAScore;
+	public Integer getTeamHomeScore() {
+		return teamHomeScore;
 	}
 
-	public void setTeamAScore(Integer teamAScore) {
-		this.teamAScore = teamAScore;
+	public void setTeamHomeScore(Integer teamHomeScore) {
+		this.teamHomeScore = teamHomeScore;
 	}
 
-	public Integer getTeamBScore() {
-		return teamBScore;
+	public Integer getTeamAwayScore() {
+		return teamAwayScore;
 	}
 
-	public void setTeamBScore(Integer teamBScore) {
-		this.teamBScore = teamBScore;
+	public void setTeamAwayScore(Integer teamAwayScore) {
+		this.teamAwayScore = teamAwayScore;
 	}
 
-	public Integer getTeamAPoint() {
-		return teamAPoint;
+	public Integer getTeamHomePoint() {
+		return teamHomePoint;
 	}
 
-	public void setTeamAPoint(Integer teamAPoint) {
-		this.teamAPoint = teamAPoint;
+	public void setTeamHomePoint(Integer teamHomePoint) {
+		this.teamHomePoint = teamHomePoint;
 	}
 
-	public Integer getTeamBPoint() {
-		return teamBPoint;
+	public Integer getTeamAwayPoint() {
+		return teamAwayPoint;
 	}
 
-	public void setTeamBPoint(Integer teamBPoint) {
-		this.teamBPoint = teamBPoint;
+	public void setTeamAwayPoint(Integer teamAwayPoint) {
+		this.teamAwayPoint = teamAwayPoint;
 	}
 
-	public Integer getTeamABonusPoint() {
-		return teamABonusPoint;
+	public Integer getTeamHomeBonusPoint() {
+		return teamHomeBonusPoint;
 	}
 
-	public void setTeamABonusPoint(Integer teamABonusPoint) {
-		this.teamABonusPoint = teamABonusPoint;
+	public void setTeamHomeBonusPoint(Integer teamHomeBonusPoint) {
+		this.teamHomeBonusPoint = teamHomeBonusPoint;
 	}
 
-	public Integer getTeamBBonusPoint() {
-		return teamBBonusPoint;
+	public Integer getTeamAwayBonusPoint() {
+		return teamAwayBonusPoint;
 	}
 
-	public void setTeamBBonusPoint(Integer teamBBonusPoint) {
-		this.teamBBonusPoint = teamBBonusPoint;
+	public void setTeamAwayBonusPoint(Integer teamAwayBonusPoint) {
+		this.teamAwayBonusPoint = teamAwayBonusPoint;
 	}
 
-	public Integer getTeamAPenaltyPoint() {
-		return teamAPenaltyPoint;
+	public Integer getTeamHomePenaltyPoint() {
+		return teamHomePenaltyPoint;
 	}
 
-	public void setTeamAPenaltyPoint(Integer teamAPenaltyPoint) {
-		this.teamAPenaltyPoint = teamAPenaltyPoint;
+	public void setTeamHomePenaltyPoint(Integer teamHomePenaltyPoint) {
+		this.teamHomePenaltyPoint = teamHomePenaltyPoint;
 	}
 
-	public Integer getTeamBPenaltyPoint() {
-		return teamBPenaltyPoint;
+	public Integer getTeamAwayPenaltyPoint() {
+		return teamAwayPenaltyPoint;
 	}
 
-	public void setTeamBPenaltyPoint(Integer teamBPenaltyPoint) {
-		this.teamBPenaltyPoint = teamBPenaltyPoint;
+	public void setTeamAwayPenaltyPoint(Integer teamAwayPenaltyPoint) {
+		this.teamAwayPenaltyPoint = teamAwayPenaltyPoint;
 	}
 
 	@Override
 	public String toString() {
-		return "Match [id=" + id + ", round=" + round + ", matchDate=" + matchDate + ", teamA=" + teamA + ", teamB="
-				+ teamB + ", teamAScore=" + teamAScore + ", teamBScore=" + teamBScore + ", teamAPoint=" + teamAPoint
-				+ ", teamBPoint=" + teamBPoint + ", teamABonusPoint=" + teamABonusPoint + ", teamBBonusPoint="
-				+ teamBBonusPoint + ", teamAPenaltyPoint=" + teamAPenaltyPoint + ", teamBPenaltyPoint="
-				+ teamBPenaltyPoint + "]";
+		return "Match [id=" + id + ", round=" + round + ", matchDate=" + matchDate + ", teamHome=" + teamHome
+				+ ", teamAway=" + teamAway + ", teamHomeScore=" + teamHomeScore + ", teamAwayScore=" + teamAwayScore
+				+ ", teamHomePoint=" + teamHomePoint + ", teamAwayPoint=" + teamAwayPoint + ", teamHomeBonusPoint="
+				+ teamHomeBonusPoint + ", teamAwayBonusPoint=" + teamAwayBonusPoint + ", teamHomePenaltyPoint="
+				+ teamHomePenaltyPoint + ", teamAwayPenaltyPoint=" + teamAwayPenaltyPoint + "]";
 	}
 
+	
 }

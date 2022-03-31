@@ -17,6 +17,7 @@ import com.kiran.league.maker.persist.entity.Round;
 import com.kiran.league.maker.persist.entity.Team;
 import com.kiran.league.maker.persist.entity.Tournament;
 import com.kiran.league.maker.persist.entity.TournamentType;
+import com.kiran.league.maker.service.MatchService;
 import com.kiran.league.maker.service.RoundService;
 import com.kiran.league.maker.service.TeamService;
 import com.kiran.league.maker.service.TournamnetService;
@@ -31,12 +32,15 @@ public class TournamnetServiceImpl implements TournamnetService {
 
 	@Autowired
 	TournamentRepository tournamentRepository;
+	
+	@Autowired
+	MatchService matchService;
 
 	@Autowired
 	RoundService roundService;
 
 	@Override
-	public void createNewTournamnet(TournamentCreate tournamentCreate) {
+	public Tournament createNewTournamnet(TournamentCreate tournamentCreate) {
 		
 		String teams = tournamentCreate.getTeams();
 		
@@ -56,7 +60,7 @@ public class TournamnetServiceImpl implements TournamnetService {
 		
 		for(int i = 0 ; i < teamListSize ; i++)
 		{
-			completeTeamArray[i] = teamArray[i];
+			completeTeamArray[i] = teamArray[i].trim();
 		}
 		
 		if(finalTeamSize > teamListSize)
@@ -83,5 +87,8 @@ public class TournamnetServiceImpl implements TournamnetService {
 		
 		List<Round> rounds = roundService.createTournamentRound(tournament, roundCount);
 		
+		matchService.createMatchSchedule(teamList, rounds);
+		
+		return tournament;
 	}
 }
