@@ -91,4 +91,10 @@ public class TournamnetServiceImpl implements TournamnetService {
 		
 		return tournament;
 	}
+
+	@Override
+	public Tournament getTournamentByCode(String code) {
+		return tournamentRepository.findByCode(code);
+	}
+
 }

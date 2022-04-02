@@ -2,12 +2,14 @@ package com.kiran.league.maker.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kiran.league.maker.common.exception.NoDataFoundException;
 import com.kiran.league.maker.persist.dao.TeamRepository;
 import com.kiran.league.maker.persist.entity.Team;
 import com.kiran.league.maker.service.TeamService;
@@ -40,6 +42,15 @@ public class TeamServiceImpl implements TeamService {
 		
 		return teamRepository.saveAllAndFlush(newTeams);
 		
+	}
+
+	@Override
+	public Team getTeamById(Long id) {
+		Optional<Team> teamOptional = teamRepository.findById(id);
+		if(teamOptional.isEmpty())
+			throw new NoDataFoundException("No team found with id" + id);
+		
+		return teamOptional.get();
 	}
 
 }

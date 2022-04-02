@@ -16,6 +16,8 @@ public class Round {
 	private Long id;
 
 	private String name;
+	
+	private Integer roundNumber;
 
 	@ManyToOne
 	private Tournament tournament;
@@ -47,10 +49,19 @@ public class Round {
 	public void setTournament(Tournament tournament) {
 		this.tournament = tournament;
 	}
+	
+	public Integer getRoundNumber() {
+		return roundNumber;
+	}
+
+	public void setRoundNumber(Integer roundNumber) {
+		this.roundNumber = roundNumber;
+	}
 
 	@Override
 	public String toString() {
-		return "Round [id=" + id + ", name=" + name + ", tournament=" + tournament + "]";
+		return "Round [id=" + id + ", name=" + name + ", roundNumber=" + roundNumber + ", tournament=" + tournament
+				+ "]";
 	}
 	
 	

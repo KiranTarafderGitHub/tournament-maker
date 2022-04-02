@@ -6,4 +6,5 @@ import com.kiran.league.maker.persist.entity.Team;
 
 public interface TeamService {
 	List<Team> createTeam(List<String> teams);
+	Team getTeamById(Long id);
 }

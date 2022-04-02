@@ -55,8 +55,7 @@ CREATE TABLE `user` (
   `internal`         bit(1) DEFAULT 0,
   
   PRIMARY KEY (`id`),
-  UNIQUE KEY `INDEX_user_username` (`username`),
-  UNIQUE KEY `INDEX_user_email` (`email`)
+  UNIQUE KEY `INDEX_user_username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 

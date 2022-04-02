@@ -61,8 +61,6 @@ public class UserEntity implements UserDetails {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastAccessDate;
     
-    private String oldUsername;
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdOn;
 
@@ -235,15 +233,6 @@ public class UserEntity implements UserDetails {
         this.internal = internal;
     }
 
-    public String getOldUsername()
-    {
-        return oldUsername;
-    }
-
-    public void setOldUsername(String oldUsername)
-    {
-        this.oldUsername = oldUsername;
-    }
 
     public Set<RoleEntity> getRoles() {
         return roles;
@@ -320,9 +309,9 @@ public class UserEntity implements UserDetails {
 	public String toString() {
 		return "UserEntity [id=" + id + ", username=" + username + ", password=" + password + ", userType=" + userType
 				+ ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", phone=" + phone
-				+ ", lastAccessDate=" + lastAccessDate + ", oldUsername=" + oldUsername + ", createdOn=" + createdOn
-				+ ", createdBy=" + createdBy + ", updatedOn=" + updatedOn + ", updatedBy=" + updatedBy + ", enabled="
-				+ enabled + ", internal=" + internal + ", roles=" + roles + "]";
+				+ ", lastAccessDate=" + lastAccessDate + ", createdOn=" + createdOn + ", createdBy=" + createdBy
+				+ ", updatedOn=" + updatedOn + ", updatedBy=" + updatedBy + ", enabled=" + enabled + ", internal="
+				+ internal + ", roles=" + roles + "]";
 	}
 
 }

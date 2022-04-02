@@ -6,4 +6,7 @@ import com.kiran.league.maker.persist.entity.Tournament;
 public interface TournamnetService {
 
 	public Tournament createNewTournamnet(TournamentCreate tournament);
+	
+	public Tournament getTournamentByCode(String code);
+	
 }

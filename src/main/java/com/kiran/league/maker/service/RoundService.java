@@ -8,5 +8,7 @@ import com.kiran.league.maker.persist.entity.Tournament;
 public interface RoundService {
 	
 	List<Round> createTournamentRound(Tournament tournament,int roundCount);
+	
+	public List<Round> getRoundsForTournament(Tournament tournament);
 
 }

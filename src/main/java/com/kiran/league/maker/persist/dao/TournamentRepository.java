@@ -8,4 +8,5 @@ import com.kiran.league.maker.persist.entity.Tournament;
 @Repository
 public interface TournamentRepository extends JpaRepository<Tournament, Long> {
 
+	Tournament findByCode(String code);
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<title>Compose</title>
+<title>Create League</title>
 <div th:replace="fragments/header :: header"></div>
 <style type="text/css">
 .card-title {
@@ -176,7 +176,7 @@
 													<div class="row form-group ntype description">
 														<label for="teams"
 															class="col-sm-4 control-label text-right">Teams</label>
-														<textarea th:field="*{teams}" 
+														<textarea rows="6" th:field="*{teams}" 
 															class="col-sm-4 form-control" id="teams" placeholder="Enter one player/team per line"></textarea>
 													</div>
 												</div>
@@ -210,137 +210,5 @@
 
 	<div th:replace="fragments/common-scripts :: common-scripts"></div>
 
-<script th:inline="javascript">
-var templateList = [];
-/*<![CDATA[*/
-    //templateList = /*[[${templateList}]]*/ '';
-/*]]>*/
-</script>
-<script type="text/javascript">
-function renderTemplate( template )
-{
-	
-	template.notificationType ? $('#divNotificationType').show() : $('#divNotificationType').hide();
-	template.city ? $('#divCity').show() : $('#divCity').hide();
-	template.sendNow ? $('#divSendNow').show() : $('#divSendNow').hide();
-	template.sendLater ? $('#divSendLater').show() : $('#divSendLater').hide();
-	template.title ? $('#divTitle').show() : $('#divTitle').hide();
-	template.description ? $('#divDescription').show() : $('#divDescription').hide();
-	template.descriptionStatic ? $('#divDescriptionStatic').show() : $('#divDescriptionStatic').hide();
-	template.excelData ? $('#divExcel').show() : $('#divExcel').hide();	
-	
-	$('#purposeId').val(template.purposeId);
-	$('#descriptionStatic').text(template.descriptionStaticText);
-
-}
-
-var templateMap = new Map();
-$(document).ready(function(){
-	
-
-	console.log(templateList);
-	
-	if(templateList.length > 0)
-	{
-		templateList.forEach(function(value){
-			var templateObj = value;
-			templateMap.set(templateObj.purposeId, templateObj);
-		});
-	}		
-	//handle the default selected purpose
-	console.log(templateMap);
-	
-	var selectedPurpose = $('#purposeSelect').find('option:selected').attr("purpose-id");
-	console.log("default selected purpose: " + selectedPurpose);
-	var defaultTemplateObject;
-	if(templateMap.has( selectedPurpose ))
-	{
-		defaultTemplateObject = templateMap.get( selectedPurpose );
-	}
-	else
-	{
-		defaultTemplateObject = templateMap.get("0");
-	}
-	renderTemplate( defaultTemplateObject );
-	
-	
-	$('#purposeSelect').on('change', function() {
-		
-		var purposeId = $(this).find('option:selected').attr("purpose-id");
-		console.log("Selected Purpose Id: " + purposeId);
-		var template;
-		
-		if(templateMap.has(purposeId))
-		{
-			template = templateMap.get(purposeId);
-		}
-		else
-		{
-			template = templateMap.get("0");
-		}
-		renderTemplate( template );
-		
-	});
-	
-	$("#sendLater").datetimepicker({
-		    format: 'yyyy-mm-dd hh:ii',
-			autoclose: true,
-	        todayBtn: true,
-	        minuteStep: 05	
-	});
-	
-	
-	$('#chooseVideoDiv').hide();
-	$('#chooseImageDiv').hide();
-	
-	
-	$('#sendNow').click(function(){
-		$("#sendLater").val("");
-	});
-	
-	$('#sendLater').click(function(){
-		$('#sendNow').prop('checked', false); // Unchecks it
-	});
-	
-	$('#notificationType').on('change', function() {
-		
-		$('#contentUrl').val("");
-		
-		if(this.value == "IMAGE")
-		{
-			$('#chooseVideoDiv').fadeOut();
-			$('#chooseImageDiv').fadeIn();
-			
-		}
-		else if(this.value == "VIDEO")
-		{
-			$('#chooseImageDiv').fadeOut();
-			$('#chooseVideoDiv').fadeIn();
-		}
-		else
-		{
-			$('#chooseVideoDiv').fadeOut();
-			$('#chooseImageDiv').fadeOut();
-		}
-		  
-	});
-	
-	$("input[name='images']").change(function(){
-	    // Do something interesting here
-	    console.log(this.value);
-		$('#contentUrl').val(this.value);
-	});
-	
-	$("input[name='videos']").change(function(){
-	    // Do something interesting here
-	    console.log(this.value);
-		$('#contentUrl').val(this.value);
-	});
-	
-	//notificationType  chooseImageDiv chooseVideoDiv images videos contentUrl
-});
-
-
-</script>
 </body>
 </html>

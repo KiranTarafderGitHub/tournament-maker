@@ -22,4 +22,12 @@ public class HomeController {
 
 		return model;
 	}
+	
+	@GetMapping("/login")
+	public ModelAndView login(ModelAndView model) {
+		
+		model.setViewName("login");
+
+		return model;
+	}
 }

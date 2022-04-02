@@ -26,12 +26,18 @@ public class RoundServiceImpl implements RoundService {
 		{
 			Round round = new Round();
 			round.setName("Round " + i);
+			round.setRoundNumber(i);
 			round.setTournament(tournament);
 			rounds.add(round);
 		}
 		
 		return roundRepository.saveAllAndFlush(rounds);
 		
+	}
+
+	@Override
+	public List<Round> getRoundsForTournament(Tournament tournament) {
+		return roundRepository.findByTournament(tournament);
 	}
 
 }

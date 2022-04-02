@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<title>Schedule</title>
+<div th:replace="fragments/header :: header"></div>
+
+<body class="hold-transition sidebar-mini">
+	<!-- Site wrapper START-->
+	<div class="wrapper">
+		<!-- TOP Menu (all meta link scripts go here ) START -->
+		<div th:replace="fragments/top-menu :: top-menu"></div>
+		<!-- TOP Menu (all meta link scripts go here ) END -->
+		<!-- Left side column. contains the sidebar START -->
+		<div th:replace="fragments/left-menu-panel :: left-menu-panel"></div>
+		<!-- Left side column. contains the sidebar END -->
+		<!-- Content Wrapper. Contains page content START -->
+		<div class="content-wrapper">
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>League</h1>
+						</div>
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">League</a></li>
+								<li class="breadcrumb-item active">View</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+			<section class="content">
+				<div class="container-fluid">
+				
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="card">
+									<div class="card-header">
+										<h3 class="card-title">Standing</h3>
+									</div>
+									<div class="card-body">
+	
+										<table   id="" class="mytable" width="100%">
+											<th:block th:each="round: ${scheduleView.rounds}">
+												<thead>
+													<tr>
+														<th style="text-align:left;" colspan="4">Matchday <span th:text="${round.roundNumber}"></span></th>
+														<!-- <th></th>
+														<th></th> -->
+													</tr>
+												</thead>
+												<tbody>
+													<tr style="text-align:center;"  th:each="match,iter: ${round.matches}">
+														<td style="width:20px;text-align:center;" th:text="${iter.count}"></td>
+														<td style="width:100px;text-align:center;font-weight: bold;" th:text="${match.teamHomeName}"></td>
+														<td style="width:20px;text-align:center;"> vs </td>
+														<td style="width:100px;text-align:center;font-weight: bold;" th:text="${match.teamAwayName}"></td>
+														
+													</tr>
+												</tbody>
+											</th:block>
+											
+
+										</table>
+										
+									
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="card">
+									<div class="card-header">
+										<h3 class="card-title">Schedule</h3>
+									</div>
+									<div class="card-body">
+	
+										<table   id="" class="mytable" width="100%">
+											<th:block th:each="round: ${scheduleView.rounds}">
+												<thead>
+													<tr>
+														<th style="text-align:left;" colspan="4">Matchday <span th:text="${round.roundNumber}"></span></th>
+														<!-- <th></th>
+														<th></th> -->
+													</tr>
+												</thead>
+												<tbody>
+													<tr style="text-align:center;"  th:each="match,iter: ${round.matches}">
+														<td style="width:20px;text-align:center;" th:text="${iter.count}"></td>
+														<td style="width:100px;text-align:center;font-weight: bold;" th:text="${match.teamHomeName}"></td>
+														<td style="width:20px;text-align:center;"> vs </td>
+														<td style="width:100px;text-align:center;font-weight: bold;" th:text="${match.teamAwayName}"></td>
+														
+													</tr>
+												</tbody>
+											</th:block>
+											
+
+										</table>
+										
+									
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</section>
+		</div>
+		<div th:replace="fragments/footer :: footer"></div>
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<div th:replace="fragments/common-scripts :: common-scripts"></div>
+	<script type="text/javascript">
+		var dataTable = null;
+		$(function() {
+			var table = $(".mytable").DataTable({
+				"retrieve" : true,
+				"bSort" : false,
+				"info" : true,
+				"paging" : true,
+				"searching" : true,
+				"ordering" : false,
+				"autoWidth" : true,
+				"deferLoading" : 57
+			/*"oLanguage": {
+			    "sEmptyTable": "No Coupons found"
+			}*/
+			});
+			
+		}); 
+	</script>
+	<style>
+	table {
+	  font-family: arial, sans-serif !important;
+	  border-collapse: collapse !important;
+	  width: 100%;
+	}
+	
+	td, th {
+	  border: 1px solid #dddddd !important;
+	  text-align: left;
+	  padding: 8px !important;
+	}
+	
+	tr:nth-child(even) {
+	  background-color: #dddddd !important;
+	}
+	</style>
+	
+</body>
+</html>

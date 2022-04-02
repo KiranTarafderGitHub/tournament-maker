@@ -11,11 +11,24 @@ CREATE TABLE `tournament` (
   UNIQUE (`code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `tournament_admin`;
+CREATE TABLE `tournament_admin` (
+  `id`                   int(11)    NOT NULL AUTO_INCREMENT,
+  `tournament_id`        int(11)    NOT NULL,
+  `user_id`              int(11)    NOT NULL,
+ 
+  
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_tournament_admin_tournament_id` 	FOREIGN KEY (`tournament_id`) 	REFERENCES `tournament` (`id`) 	ON DELETE CASCADE,
+  CONSTRAINT `FK__tournament_admin_user_id` 	FOREIGN KEY (`user_id`) 	REFERENCES `user` (`id`) 	ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
 
 DROP TABLE IF EXISTS `round`;
 CREATE TABLE `round` (
   `id`                   int(11)        NOT NULL AUTO_INCREMENT,
   `name`                 varchar(100)   NOT NULL,
+  `round_number`         int(11)        NOT NULL, 
   `tournament_id`        int(11)        NOT NULL,  
   
   PRIMARY KEY (`id`),
