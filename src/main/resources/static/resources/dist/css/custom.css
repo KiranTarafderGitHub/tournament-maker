@@ -300,8 +300,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 .dataTables_wrapper {
 	overflow: auto;
-	min-height: 380px;
-	margin-top: 30px;
+	/* min-height: 380px; */
+	/* margin-top: 30px; */
 	margin-bottom: 33px;
 }
 .dataTables_length {

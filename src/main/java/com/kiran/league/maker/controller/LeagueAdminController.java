@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,6 +24,7 @@ import com.kiran.league.maker.common.bean.rest.ScheduleView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView.MatchView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView.RoundView;
 import com.kiran.league.maker.common.bean.rest.TournamentCreate;
+import com.kiran.league.maker.common.bean.rest.UpdateScorePost;
 import com.kiran.league.maker.persist.dto.User;
 import com.kiran.league.maker.persist.entity.Match;
 import com.kiran.league.maker.persist.entity.Round;
@@ -113,6 +116,44 @@ public class LeagueAdminController {
         
         return model;
     }
+	
+	@GetMapping("/update/score.html")
+    public ModelAndView getUpdateScore(Principal principal, ModelAndView model)
+    {
+		Tournament tournament = new Tournament();
+		Map<Round, List<Match>> roundMatches = new HashMap<>();
+		ScheduleView scheduleView = new ScheduleView();
+        try
+        {
+        	UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
+            User user = ((User) _principal.getPrincipal());
+            
+        	tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
+        	//get match schedule
+        	scheduleView = matchService.getScheduleForTournament(tournament);
+        
+        	
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        }
+        model.addObject("updateScore",new UpdateScorePost());
+        model.addObject("tournament",tournament);
+    	model.addObject("scheduleView",scheduleView);
+        model.setViewName("admin/score");
+        
+        return model;
+    }
+	
+	@PostMapping("/update/score")
+	public ModelAndView updateMatchScore(Principal principal, ModelAndView model, @ModelAttribute UpdateScorePost updateScore)
+	{
+		log.info(updateScore.toString());
+		return getUpdateScore(principal,model);
+	}
+	
 	
 	
 }
