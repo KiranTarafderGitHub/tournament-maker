@@ -53,9 +53,11 @@ public class LeagueAdminController {
         try
         {
         	UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
-            UserEntity user = ((UserEntity) _principal.getPrincipal());
+            User user = ((User) _principal.getPrincipal());
             
-        	Tournament tournament = tournamentAdminService.getTournamentForUser(user);
+        	Tournament tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
+    		ScheduleView scheduleView = new ScheduleView();
+    		LeagueTableView leagueView = new LeagueTableView();
         	if(!leagueCode.equals(tournament.getCode()))
         	{
         		model.addObject("errorMsg","Invalid League Code Provided");
@@ -63,9 +65,14 @@ public class LeagueAdminController {
                 return model;
         	}
         	
-        	//TournamentCreate tournament = new TournamentCreate();
+        	
+        	tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
+        	scheduleView = matchService.getScheduleForTournament(tournament);
+        	leagueView = matchService.getLeagueStanding(tournament);
+        	
         	model.addObject("tournament",tournament);
-        	model.addObject("tournamentType",TournamentType.values());
+        	model.addObject("scheduleView",scheduleView);
+        	model.addObject("leagueView",leagueView);
             model.setViewName("admin/view");
         }
         catch (Exception e)
@@ -73,6 +80,8 @@ public class LeagueAdminController {
             log.error(e.getMessage(),e);
             model.setViewName("error");
         }
+        
+        
         
         return model;
     }
