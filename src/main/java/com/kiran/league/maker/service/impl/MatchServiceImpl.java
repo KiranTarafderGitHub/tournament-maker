@@ -7,19 +7,26 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import com.kiran.league.maker.common.bean.rest.LeagueTableView;
+import com.kiran.league.maker.common.bean.rest.LeagueTableView.TeamSummaryView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView.MatchView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView.RoundView;
+import com.kiran.league.maker.common.bean.rest.UpdateScorePost;
 import com.kiran.league.maker.common.exception.InvalidDataException;
 import com.kiran.league.maker.persist.dao.MatchRepository;
+import com.kiran.league.maker.persist.dao.TournamentRepository;
+import com.kiran.league.maker.persist.dto.Result;
 import com.kiran.league.maker.persist.entity.Match;
 import com.kiran.league.maker.persist.entity.Round;
 import com.kiran.league.maker.persist.entity.Team;
@@ -27,6 +34,7 @@ import com.kiran.league.maker.persist.entity.Tournament;
 import com.kiran.league.maker.service.MatchService;
 import com.kiran.league.maker.service.RoundService;
 import com.kiran.league.maker.service.TeamService;
+import com.kiran.league.maker.service.TournamnetService;
 
 @Service
 public class MatchServiceImpl implements MatchService {
@@ -41,7 +49,10 @@ public class MatchServiceImpl implements MatchService {
 	
 	@Autowired
 	TeamService teamService;
-
+	
+	@Autowired
+	TournamentRepository tournamentRepository;
+	
 	Map<String, List<String>> individualTeamOpponetList = new HashMap<>();
 
 	Map<String, Team> teamMap = new HashMap<>();
@@ -73,7 +84,7 @@ public class MatchServiceImpl implements MatchService {
 		for (int i = 0; i < legCount; i++) {
 			individualTeamOpponetList = getIndividualTeamOpponentList(teams);
 			for (int j = 0; j < totalTeamCount - 1; j++) {
-				log.info("Going to generate round matches with teams: " + allTeams + " for leg " + (i + 1) + " ===>");
+				log.info("Going to generate round " +(roundIndex +1) + " matches with teams: " + allTeams + " for leg " + (i + 1) + " ================>");
 				List<Match> roundMatches = buildMatchesForRound(roundIndex, rounds, allTeams);
 				roundMatches.forEach(m -> matches.add(m));
 				roundIndex++;
@@ -101,13 +112,18 @@ public class MatchServiceImpl implements MatchService {
 			roundMatchList.forEach(m -> {
 				MatchView matchView = new MatchView();
 				BeanUtils.copyProperties(m, matchView);
+				
 				Team teamHome = teamService.getTeamById(m.getTeamHome());
 				matchView.setTeamHomeName(teamHome.getName());
 				matchView.setTeamHomeCode(teamHome.getCode());
+				matchView.setTeamHomeScore(m.getTeamHomeScore());
+				
 				Team teamAway = teamService.getTeamById(m.getTeamAway());
 				matchView.setTeamAwayName(teamAway.getName());
 				matchView.setTeamAwayCode(teamAway.getCode());
+				matchView.setTeamAwayScore(m.getTeamAwayScore());
 				
+				//log.info(matchView.toString());
 				roundViewMatches.add(matchView);
 			});
 			
@@ -120,7 +136,164 @@ public class MatchServiceImpl implements MatchService {
 		return scheduleView;
 	}
 	
+	
+	@Override
+	public LeagueTableView getLeagueStanding(Tournament tournament) {
+		LeagueTableView leagueTableView = new LeagueTableView();
+		List<TeamSummaryView> teamSummaryList = new ArrayList<>();
+		
+		
+		List<Team> allTeam = teamService.getAllTeamOfTournament(tournament);
+		for(Team t: allTeam)
+		{
+			int totalBonus=0;int totalPenalty=0;int totalPoint=0;int matchPlayed=0;int matchWon = 0;
+			int matchDraw=0;int matchLost=0;int goalScored = 0;int goalConceded = 0;int goalDifference=0;
+			
+			TeamSummaryView tsView = new TeamSummaryView();
+			
+			tsView.setTeamId(t.getId());
+			tsView.setTeamName(t.getName());
+			
+			List<Match> matchList = getAllMatchForTeam(t.getId(),tournament.getId());
+			for(Match m : matchList)
+			{
+				if(m.getTeamHome().intValue() == t.getId().intValue())
+				{
+					if( m.getTeamHomeScore() != null )
+					{
+						matchPlayed++;
+						goalScored += m.getTeamHomeScore().intValue();
+						goalConceded += m.getTeamAwayScore().intValue();
+						totalBonus += ( m.getTeamHomeBonusPoint() != null ? m.getTeamHomeBonusPoint().intValue() : 0);
+						totalPenalty += ( m.getTeamHomePenaltyPoint() != null ? m.getTeamHomePenaltyPoint().intValue() : 0);
+						
+						if(m.getTeamHomeScore().intValue() > m.getTeamAwayScore().intValue())
+						{
+							matchWon++;
+							totalPoint += Result.WIN.getPoint().intValue();
+						}
+						else if(m.getTeamHomeScore().intValue() == m.getTeamAwayScore().intValue())
+						{
+							matchDraw++;
+							totalPoint += Result.DRAW.getPoint().intValue();
+						}
+						else
+						{
+							matchLost++;
+							totalPoint += Result.LOSS.getPoint().intValue();
+						}
+					}
+				}
+				else if(m.getTeamAway().intValue() == t.getId().intValue())
+				{
+					if( m.getTeamAwayScore() != null )
+					{
+						matchPlayed++;
+						goalScored += m.getTeamAwayScore().intValue();
+						goalConceded += m.getTeamHomeScore().intValue();
+						totalBonus += ( m.getTeamAwayBonusPoint() != null ? m.getTeamAwayBonusPoint().intValue() : 0);
+						totalPenalty += ( m.getTeamAwayPenaltyPoint() != null ? m.getTeamAwayPenaltyPoint().intValue() : 0);
+						
+						if(m.getTeamAwayScore().intValue() > m.getTeamHomeScore().intValue())
+						{
+							matchWon++;
+							totalPoint += Result.WIN.getPoint().intValue();
+						}
+						else if(m.getTeamAwayScore().intValue() ==  m.getTeamHomeScore().intValue())
+						{
+							matchDraw++;
+							totalPoint += Result.DRAW.getPoint().intValue();
+						}
+						else
+						{
+							matchLost++;
+							totalPoint += Result.LOSS.getPoint().intValue();
+						}
+					}
+				}
+			}
+			
+			totalPoint += (totalBonus - totalPenalty);
+			goalDifference = goalScored - goalConceded;
+			
+			tsView.setMatchPlayed(matchPlayed);
+			tsView.setMatchWon(matchWon);
+			tsView.setMatchDraw(matchDraw);
+			tsView.setMatchLost(matchLost);
+			tsView.setGoalScored(goalScored);
+			tsView.setGoalConceded(goalConceded);
+			tsView.setGoalDifference(goalDifference);
+			tsView.setTotalBonusPoint(totalBonus);
+			tsView.setTotalPenaltyPoint(totalPenalty);
+			tsView.setTotalPoints(totalPoint);
+			
+			teamSummaryList.add(tsView);
+		}
+		
+		List<TeamSummaryView> sortedTeamList = sortTeamForLeague(teamSummaryList);
+		//Collections.reverse(sortedTeamList);
+		
+		leagueTableView.setTeams(sortedTeamList);
+		
+		return leagueTableView;
+	}
+	
+	@Override
+	public List<Match> getAllMatchForTeam(Long teamId, Long tournamnetId) {
+		List<Match> matchListForTeam = new ArrayList<>();
+		Tournament tournament = tournamentRepository.getById(tournamnetId);
+		List<Round> rounds = roundService.getRoundsForTournament(tournament);
+		rounds.forEach(r -> {
+			List<Match> roundMatches = getAllMatchForRound(r);
+			roundMatches.forEach(m -> {
+				if(m.getTeamHome() == teamId)
+					matchListForTeam.add(m);
+				else if(m.getTeamAway() == teamId)
+					matchListForTeam.add(m);
+			});
+		});
+		 
+		return matchListForTeam;
+	}
 
+	@Override
+	public void updateScore(UpdateScorePost score) {
+
+
+		Match match = matchRepository.getById(score.getMatchId());
+		
+		int homeScore = score.getTeamHomeScore();
+		int awayScore = score.getTeamAwayScore();
+		
+		match.setTeamHomeScore(score.getTeamHomeScore());
+		match.setTeamAwayScore(score.getTeamAwayScore());
+		
+		match.setTeamHomeBonusPoint(score.getTeamHomeBonus());
+		match.setTeamAwayBonusPoint(score.getTeamAwayBonus());
+		
+		match.setTeamHomePenaltyPoint(score.getTeamHomePenalty());
+		match.setTeamAwayPenaltyPoint(score.getTeamAwayPenalty());
+		
+		if(homeScore > awayScore)
+		{
+			match.setTeamHomePoint(Result.WIN.getPoint());
+			match.setTeamAwayPoint(Result.LOSS.getPoint());
+		}
+		else if (homeScore == awayScore)
+		{
+			match.setTeamHomePoint(Result.DRAW.getPoint());
+			match.setTeamAwayPoint(Result.DRAW.getPoint());
+		}
+		else
+		{
+			match.setTeamHomePoint(Result.LOSS.getPoint());
+			match.setTeamAwayPoint(Result.WIN.getPoint());
+		}
+		
+		matchRepository.save(match);
+	}
+	
+	
 	public List<Match> buildMatchesForRound(int roundIndex, List<Round> rounds, List<String> allTeams) {
 		List<Match> matchList = new ArrayList<>();
 
@@ -133,10 +306,11 @@ public class MatchServiceImpl implements MatchService {
 		allTeams.forEach(t -> {
 
 			List<String> opponents = individualTeamOpponetList.get(t);
-			log.info(t + "'s remaining opp in Leg " + (roundIndex + 1) + " is " + opponents
+			log.info(t + "'s remaining opp in Round " + (roundIndex + 1) + " is " + opponents
 					+ " perRoundOpponentList is " + perRoundOpponentList);
 
 			if (!matchDayScheduledTeam.contains(t)) {
+				
 				if (CollectionUtils.isNotEmpty(opponents) && CollectionUtils.isNotEmpty(perRoundOpponentList)) {
 					List<String> commonAvailableOpponent = new ArrayList<String>(opponents);
 					commonAvailableOpponent.retainAll(perRoundOpponentList);
@@ -160,9 +334,15 @@ public class MatchServiceImpl implements MatchService {
 
 						log.info(t + "'s opponent fixed is: " + opponentTeam.getName());
 						// remove the opponent from leg opponent list and round opponent list
-						int opponentIndex = opponents.indexOf(oponnentTeamName);
-						opponents.remove(opponentIndex);
-						individualTeamOpponetList.replace(t, opponents);
+						List<String> remainingOpponentList = new ArrayList<>();
+						opponents.forEach(opp -> {
+							if(!homeTeam.getName().equals(opp))
+							{
+								remainingOpponentList.add(opp);
+							}
+						});
+						
+						individualTeamOpponetList.replace(t, remainingOpponentList);
 
 						// also remove home team from opponent's leg opponent list
 						List<String> opponentOpponentList = individualTeamOpponetList.get(oponnentTeamName);
@@ -175,8 +355,12 @@ public class MatchServiceImpl implements MatchService {
 					}
 
 				}
+				else
+				{
+					log.info(t + "'s match has cannot be scheduled for round " + (roundIndex + 1) + ", because either teams opponent list is empty or all opponent match has been scheduler. opponents size " + opponents.size() +", round oppo size : " + perRoundOpponentList.size());
+				}
 			} else {
-				log.info(t + " match has already been scheduled for round " + (roundIndex + 1));
+				log.info(t + "'s match has already been scheduled for round " + (roundIndex + 1));
 			}
 
 		});
@@ -199,6 +383,34 @@ public class MatchServiceImpl implements MatchService {
 		});
 
 		return individualTeamOpponentMap;
+	}
+
+	@Override
+	public List<Match> getAllMatchForRound(Round round) {
+		return matchRepository.findByRound(round);
+	}
+
+
+
+	public List<TeamSummaryView> sortTeamForLeague(List<TeamSummaryView> teamList)
+	{
+		if(teamList.isEmpty())
+		{
+			return Collections.emptyList();
+		}
+		
+		List<TeamSummaryView> tmpTeamList = new ArrayList<>();
+		teamList.forEach(t-> tmpTeamList.add(t));
+		
+		Comparator<TeamSummaryView> compareByPoint = Comparator.comparing( TeamSummaryView::getTotalPoints).reversed();
+		Comparator<TeamSummaryView> compareByGoalDifference = Comparator.comparing( TeamSummaryView::getGoalDifference).reversed();
+		Comparator<TeamSummaryView> compareByGoalForwarded = Comparator.comparing(TeamSummaryView::getGoalScored).reversed();
+
+		Comparator<TeamSummaryView> compareTeam = compareByPoint.thenComparing(compareByGoalDifference).thenComparing(compareByGoalForwarded);
+
+		
+
+		return tmpTeamList.stream().sorted(compareTeam).collect(Collectors.toList());
 	}
 
 }

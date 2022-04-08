@@ -33,7 +33,26 @@
 			</section>
 			<section class="content">
 				<div class="container-fluid">
-				
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="box-header">
+	                                <div class="alert alert-success" th:if="${successMsg != null}">
+	                                    <strong>Success! </strong>
+	                                    <div th:text="${successMsg}"/>
+	                                </div>
+	                                <div class="alert alert-warning" th:if="${warningMessage != null}">
+	                                    <strong>Warning! </strong>
+	                                    <div th:text="${warningMessage}"/>
+	                                </div>
+	                                <div class="alert alert-danger" th:if="${errorMsg != null}">
+	                                    <strong>Failure! </strong>
+	                                    <div th:text="${errorMsg}"/>
+	                                </div>
+	                            </div>
+	                    	</div>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-12">
 							<div class="box">
@@ -43,27 +62,43 @@
 									</div>
 									<div class="card-body">
 	
-										<table   id="" class="mytable" width="100%">
-											<th:block th:each="round: ${scheduleView.rounds}">
-												<thead>
+										<table   id="table" class="mytable" width="100%">
+												<thead style="margin-top: 5px;background-color:#5DADE2;">
 													<tr>
-														<th style="text-align:left;" colspan="4">Matchday <span th:text="${round.roundNumber}"></span></th>
-														<!-- <th></th>
-														<th></th> -->
+														
+														<th>#</th>
+														<th>Team</th>
+														<th>Played</th>
+														<th>Won</th>
+														<th>Draw</th>
+														<th>Loss</th>
+														<th>GF</th>
+														<th>GA</th>
+														<th>GD</th>
+														<th>Bonus</th>
+														<th>Penalty</th>
+														<th>Points</th>
 													</tr>
 												</thead>
 												<tbody>
-													<tr style="text-align:center;"  th:each="match,iter: ${round.matches}">
-														<td style="width:20px;text-align:center;" th:text="${iter.count}"></td>
-														<td style="width:100px;text-align:center;font-weight: bold;" th:text="${match.teamHomeName}"></td>
-														<td style="width:20px;text-align:center;"> vs </td>
-														<td style="width:100px;text-align:center;font-weight: bold;" th:text="${match.teamAwayName}"></td>
+													<tr class="border-bottom" style="text-align:center;"  th:each="t,iter: ${leagueView.teams}">
+																											
+														<td style="max-width:20px;text-align:center;" th:text="${iter.count}"></td>
+														<td style="max-width:100px;text-align:left;font-weight: bold;" th:text="${t.teamName}"></td>
+														<td style="max-width:50px;text-align:center;" th:text="${t.matchPlayed}"></td>
+														<td style="max-width:50px;text-align:center;" th:text="${t.matchWon}"> </td>
+														<td style="max-width:50px;text-align:center;" th:text="${t.matchDraw}"> </td>
+														<td style="max-width:50px;text-align:center;" th:text="${t.matchLost}"> </td>
+														<td style="max-width:50px;text-align:center;" th:text="${t.goalScored}"> </td>
+														<td style="max-width:50px;text-align:center;" th:text="${t.goalConceded}"> </td>
+														<td style="max-width:50px;text-align:center;" th:text="${t.goalDifference}"> </td>
+														<td style="max-width:50px;text-align:center;" th:text="${t.totalBonusPoint}"> </td>
+														<td style="max-width:50px;text-align:center;" th:text="${t.totalPenaltyPoint}"> </td>
+														<td style="max-width:50px;text-align:center;" th:text="${t.totalPoints}"> </td>
 														
 													</tr>
+													
 												</tbody>
-											</th:block>
-											
-
 										</table>
 										
 									
@@ -84,7 +119,7 @@
 	
 										<table   id="" class="mytable" width="100%">
 											<th:block th:each="round: ${scheduleView.rounds}">
-												<thead>
+												<thead style="margin-top: 5px;background-color:#5DADE2;">
 													<tr>
 														<th style="text-align:left;" colspan="4">Matchday <span th:text="${round.roundNumber}"></span></th>
 														<!-- <th></th>
@@ -92,10 +127,16 @@
 													</tr>
 												</thead>
 												<tbody>
-													<tr style="text-align:center;"  th:each="match,iter: ${round.matches}">
+													<tr class="border-bottom" style="text-align:center;"  th:each="match,iter: ${round.matches}">
 														<td style="width:20px;text-align:center;" th:text="${iter.count}"></td>
 														<td style="width:100px;text-align:center;font-weight: bold;" th:text="${match.teamHomeName}"></td>
-														<td style="width:20px;text-align:center;"> vs </td>
+														<td style="width:20px;text-align:center;" >
+															<span th:if="${match.teamHomeScore != null}" th:text="${match.teamHomeScore} +' - ' + ${match.teamAwayScore}" th:remove="tag">
+															</span>
+															<span th:unless="${match.teamHomeScore != null}" th:remove="tag">
+																vs
+															</span>
+														</td>
 														<td style="width:100px;text-align:center;font-weight: bold;" th:text="${match.teamAwayName}"></td>
 														
 													</tr>
@@ -125,15 +166,13 @@
 			var table = $(".mytable").DataTable({
 				"retrieve" : true,
 				"bSort" : false,
-				"info" : true,
-				"paging" : true,
-				"searching" : true,
+				"info" : false,
+				"paging" : false,
+				"searching" : false,
 				"ordering" : false,
 				"autoWidth" : true,
-				"deferLoading" : 57
-			/*"oLanguage": {
-			    "sEmptyTable": "No Coupons found"
-			}*/
+				"deferLoading" : 50
+			
 			});
 			
 		}); 
@@ -145,15 +184,25 @@
 	  width: 100%;
 	}
 	
-	td, th {
+	tr.border-bottom td {
+        border-bottom: 1pt solid #dddddd;
+     }
+	
+	th {
 	  border: 1px solid #dddddd !important;
-	  text-align: left;
+	  text-align: center;
 	  padding: 8px !important;
 	}
 	
-	tr:nth-child(even) {
-	  background-color: #dddddd !important;
+	td {
+	  border: 1px 0px 1px 0px solid #dddddd !important;
+	  text-align: center;
+	  padding: 8px !important;
 	}
+	
+	/* tr:nth-child(even) {
+	  background-color: #dddddd !important;
+	} */
 	</style>
 	
 </body>

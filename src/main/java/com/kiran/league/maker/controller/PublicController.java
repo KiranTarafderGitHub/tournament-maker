@@ -1,9 +1,14 @@
 package com.kiran.league.maker.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +18,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kiran.league.maker.common.bean.rest.CodeBean;
+import com.kiran.league.maker.common.bean.rest.LeagueTableView;
+import com.kiran.league.maker.common.bean.rest.ScheduleView;
 import com.kiran.league.maker.common.bean.rest.TournamentCreate;
 import com.kiran.league.maker.common.exception.InvalidDataException;
 import com.kiran.league.maker.common.exception.NoDataFoundException;
+import com.kiran.league.maker.persist.dto.User;
+import com.kiran.league.maker.persist.entity.Match;
+import com.kiran.league.maker.persist.entity.Round;
 import com.kiran.league.maker.persist.entity.Tournament;
 import com.kiran.league.maker.persist.entity.TournamentType;
 import com.kiran.league.maker.persist.entity.UserEntity;
+import com.kiran.league.maker.service.MatchService;
 import com.kiran.league.maker.service.TournamentAdminService;
 import com.kiran.league.maker.service.TournamnetService;
 
@@ -34,6 +46,9 @@ public class PublicController {
 	
 	@Autowired
 	TournamentAdminService tournamentAdminService;
+	
+	@Autowired
+	MatchService matchService;
 	
 	@Autowired
 	PasswordEncoder encoder;
@@ -120,13 +135,25 @@ public class PublicController {
         return model;
     }
 	
-	@GetMapping("/league/{leagueCode}")
+	@GetMapping("/league/view/{leagueCode}")
     public ModelAndView viewLeague(ModelAndView model, @PathVariable String leagueCode)
     {
 		
         try
         {
-        	TournamentCreate tournament = new TournamentCreate();
+        	Tournament tournament = new Tournament();
+    		ScheduleView scheduleView = new ScheduleView();
+    		LeagueTableView leagueView = new LeagueTableView();
+            
+            	
+        	tournament = tournamnetService.getTournamentByCode(leagueCode);
+        	scheduleView = matchService.getScheduleForTournament(tournament);
+        	leagueView = matchService.getLeagueStanding(tournament);
+            	
+           
+            model.addObject("tournament",tournament);
+        	model.addObject("scheduleView",scheduleView);
+        	model.addObject("leagueView",leagueView);
         	model.addObject("tournament",tournament);
         	model.addObject("tournamentType",TournamentType.values());
         	model.setViewName("public/league/view");
@@ -134,9 +161,60 @@ public class PublicController {
         catch (Exception e)
         {
             log.error(e.getMessage(),e);
-            model.setViewName("error");
+            model.addObject("errorMsg",e.getMessage());
+        	model.setViewName("error");
         }
         
+        return model;
+    }
+	
+	@GetMapping("/league/view.html")
+    public ModelAndView findLeague(ModelAndView model)
+    {
+		
+        try
+        {
+        	model.addObject("codeBean",new CodeBean());
+        	model.setViewName("public/league/find");
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        	model.setViewName("error");
+        }
+        
+        return model;
+    }
+	
+	@PostMapping("league/show")
+    public ModelAndView viewLeaguePost(ModelAndView model, @ModelAttribute CodeBean codeBean)
+    {
+		try
+        {
+        	Tournament tournament = new Tournament();
+    		ScheduleView scheduleView = new ScheduleView();
+    		LeagueTableView leagueView = new LeagueTableView();
+            
+            	
+        	tournament = tournamnetService.getTournamentByCode(codeBean.getCode());
+        	scheduleView = matchService.getScheduleForTournament(tournament);
+        	leagueView = matchService.getLeagueStanding(tournament);
+            	
+           
+            model.addObject("tournament",tournament);
+        	model.addObject("scheduleView",scheduleView);
+        	model.addObject("leagueView",leagueView);
+        	model.addObject("tournament",tournament);
+        	model.addObject("tournamentType",TournamentType.values());
+        	model.setViewName("public/league/view");
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        	model.setViewName("error");
+        }
         
         return model;
     }

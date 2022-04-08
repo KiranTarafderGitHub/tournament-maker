@@ -225,6 +225,19 @@ public class ScheduleView {
 		public void setTeamAwayCode(String teamAwayCode) {
 			this.teamAwayCode = teamAwayCode;
 		}
+
+		@Override
+		public String toString() {
+			return "MatchView [id=" + id + ", matchDate=" + matchDate + ", teamHome=" + teamHome + ", teamAway="
+					+ teamAway + ", teamHomeName=" + teamHomeName + ", teamAwayName=" + teamAwayName + ", teamHomeCode="
+					+ teamHomeCode + ", teamAwayCode=" + teamAwayCode + ", teamHomeScore=" + teamHomeScore
+					+ ", teamAwayScore=" + teamAwayScore + ", teamHomePoint=" + teamHomePoint + ", teamAwayPoint="
+					+ teamAwayPoint + ", teamHomeBonusPoint=" + teamHomeBonusPoint + ", teamAwayBonusPoint="
+					+ teamAwayBonusPoint + ", teamHomePenaltyPoint=" + teamHomePenaltyPoint + ", teamAwayPenaltyPoint="
+					+ teamAwayPenaltyPoint + "]";
+		}
+		
+		
 		
 	}
 }

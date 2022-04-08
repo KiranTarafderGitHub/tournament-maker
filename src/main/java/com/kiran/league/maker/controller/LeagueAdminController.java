@@ -1,14 +1,12 @@
 package com.kiran.league.maker.controller;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,10 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kiran.league.maker.common.bean.rest.LeagueTableView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView;
-import com.kiran.league.maker.common.bean.rest.ScheduleView.MatchView;
-import com.kiran.league.maker.common.bean.rest.ScheduleView.RoundView;
-import com.kiran.league.maker.common.bean.rest.TournamentCreate;
 import com.kiran.league.maker.common.bean.rest.UpdateScorePost;
 import com.kiran.league.maker.persist.dto.User;
 import com.kiran.league.maker.persist.entity.Match;
@@ -33,17 +29,13 @@ import com.kiran.league.maker.persist.entity.TournamentType;
 import com.kiran.league.maker.persist.entity.UserEntity;
 import com.kiran.league.maker.service.MatchService;
 import com.kiran.league.maker.service.TournamentAdminService;
-import com.kiran.league.maker.service.TournamnetService;
 
 @Controller
 @RequestMapping("/admin")
 public class LeagueAdminController {
 
 	private static final Log log = LogFactory.getLog(LeagueAdminController.class);
-	
-	@Autowired
-	TournamnetService tournamnetService;
-	
+
 	@Autowired
 	TournamentAdminService tournamentAdminService;
 	
@@ -89,19 +81,16 @@ public class LeagueAdminController {
     public ModelAndView viewLeague(Principal principal, ModelAndView model)
     {
 		Tournament tournament = new Tournament();
-		Map<Round, List<Match>> roundMatches = new HashMap<>();
 		ScheduleView scheduleView = new ScheduleView();
+		LeagueTableView leagueView = new LeagueTableView();
         try
         {
         	UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
             User user = ((User) _principal.getPrincipal());
             
         	tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
-        	//get match schedule
         	scheduleView = matchService.getScheduleForTournament(tournament);
-        	
-        	//Get the league table
-        	
+        	leagueView = matchService.getLeagueStanding(tournament);
         	
         	
         }
@@ -112,6 +101,7 @@ public class LeagueAdminController {
         }
         model.addObject("tournament",tournament);
     	model.addObject("scheduleView",scheduleView);
+    	model.addObject("leagueView",leagueView);
         model.setViewName("admin/view");
         
         return model;
@@ -151,6 +141,19 @@ public class LeagueAdminController {
 	public ModelAndView updateMatchScore(Principal principal, ModelAndView model, @ModelAttribute UpdateScorePost updateScore)
 	{
 		log.info(updateScore.toString());
+		try
+		{
+			matchService.updateScore(updateScore);
+			model.addObject("navigateTo",updateScore.getMatchId());
+			model.addObject("successMsg","Match Score successfully updated");
+			
+		}
+		catch(Exception e)
+		{
+			log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+		}
+		
 		return getUpdateScore(principal,model);
 	}
 	

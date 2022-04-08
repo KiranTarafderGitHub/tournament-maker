@@ -9,4 +9,6 @@ public interface TournamnetService {
 	
 	public Tournament getTournamentByCode(String code);
 	
+	public Tournament getTournamentById(Long id);
+	
 }

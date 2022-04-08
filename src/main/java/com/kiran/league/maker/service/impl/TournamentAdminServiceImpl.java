@@ -34,9 +34,6 @@ public class TournamentAdminServiceImpl implements TournamentAdminService {
 	private static final Log log = LogFactory.getLog(TournamentAdminService.class);
 	
 	@Autowired
-	TournamnetService torurnamentService;
-	
-	@Autowired
 	TournamentRepository  tournamentRepository;
 	
 	@Value("${user.admin.default.password}")

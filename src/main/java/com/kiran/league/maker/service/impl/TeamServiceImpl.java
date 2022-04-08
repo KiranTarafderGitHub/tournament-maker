@@ -3,6 +3,7 @@ package com.kiran.league.maker.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,8 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kiran.league.maker.common.exception.NoDataFoundException;
+import com.kiran.league.maker.persist.dao.MatchRepository;
 import com.kiran.league.maker.persist.dao.TeamRepository;
+import com.kiran.league.maker.persist.entity.Match;
+import com.kiran.league.maker.persist.entity.Round;
 import com.kiran.league.maker.persist.entity.Team;
+import com.kiran.league.maker.persist.entity.Tournament;
+import com.kiran.league.maker.service.MatchService;
+import com.kiran.league.maker.service.RoundService;
 import com.kiran.league.maker.service.TeamService;
 
 @Service
@@ -21,6 +28,13 @@ public class TeamServiceImpl implements TeamService {
 	
 	@Autowired
 	TeamRepository teamRepository;
+	
+	@Autowired
+	RoundService roundService;
+	
+	@Autowired
+	MatchRepository matchRepository;
+
 	
 	@Override
 	public List<Team> createTeam(List<String> teams) {
@@ -51,6 +65,24 @@ public class TeamServiceImpl implements TeamService {
 			throw new NoDataFoundException("No team found with id" + id);
 		
 		return teamOptional.get();
+	}
+
+	@Override
+	public List<Team> getAllTeamOfTournament(Tournament tournament) {
+		
+		List<Long> allTeamIdWithDuplicate = new ArrayList<>();
+		List<Round> rounds = roundService.getRoundsForTournament(tournament);
+		rounds.forEach(r -> {
+			List<Match> matches = matchRepository.findByRound(r);
+			matches.forEach(m -> {
+				allTeamIdWithDuplicate.add(m.getTeamHome());
+				allTeamIdWithDuplicate.add(m.getTeamAway());
+			});
+		});
+		List<Long> allTeamId = allTeamIdWithDuplicate.stream().distinct().collect(Collectors.toList());
+		List<Team> allTeams = teamRepository.findAllById(allTeamId);
+		return allTeams;
+	
 	}
 
 }

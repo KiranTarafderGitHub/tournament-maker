@@ -32,16 +32,34 @@
 				<!-- /.container-fluid -->
 			</section>
 			<section class="content">
-				<div class="container-fluid">
-				
-				
+				<div class="container-fluid">	
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="box-header">
+	                                <div class="alert alert-success" th:if="${successMsg != null}">
+	                                    <strong>Success! </strong>
+	                                    <div th:text="${successMsg}"/>
+	                                </div>
+	                                <div class="alert alert-warning" th:if="${warningMessage != null}">
+	                                    <strong>Warning! </strong>
+	                                    <div th:text="${warningMessage}"/>
+	                                </div>
+	                                <div class="alert alert-danger" th:if="${errorMsg != null}">
+	                                    <strong>Failure! </strong>
+	                                    <div th:text="${errorMsg}"/>
+	                                </div>
+	                            </div>
+	                    	</div>
+						</div>
+					</div>			
 				<th:block th:each="round: ${scheduleView.rounds}">
 				<!--  -->
 					<div class="row">
 						<div class="col-12">
 							<div class="box">
 								<div class="card">
-									<div class="card-header">
+									<div id="12345" class="card-header">
 										<h3 class="card-title">Matchday <span th:text="${round.roundNumber}"></span></h3>
 									</div>
 									<div class="card-body">
@@ -54,7 +72,7 @@
  -->														<!-- <th></th>
 														<th></th> -->
 														
-														<th></th>
+														<th>#</th>
 														<th>Team 1 </th>
 														<th>Team 1 Score</th>
 														<th></th>
@@ -68,47 +86,48 @@
 													</tr>
 												</thead>
 												<tbody>
-													<tr style="text-align:center;"  th:each="match,iter: ${round.matches}">
+													<tr class="border-bottom" style="text-align:center;"  th:each="match,iter: ${round.matches}">
 													
 														<form method="post" th:id="'score' + ${match.id}" data-th-action="@{/admin/update/score}" th:object="${updateScore}">
+														
 															<input type="hidden"  th:id="'match' + ${match.id}"  name="matchId" th:value="${match.id}" >
 															<td style="width:20px;text-align:center;" th:text="${iter.count}"></td>
 															<td style="max-width:100px;text-align:center;font-weight: bold;" th:text="${match.teamHomeName}"></td>
 															<td style="max-width:50px;text-align:center;font-weight: bold;">
-																<div class="form__group">
-																  <input type="number" th:field="*{teamHomeScore}" class="form__input" id="" placeholder="" required="" />
+																<div th:id="'scoreRow' + ${match.id}" class="form__group">
+																  <input type="number" name="teamHomeScore" th:value="${match.teamHomeScore}" class="form__input" id="" placeholder="" required="" />
 																</div>
 															</td>
 															<td style="width:15px;text-align:center;"> vs </td>
 															<td style="max-width:50px;text-align:center;font-weight: bold;">
 																<div class="form__group">
-																  <input th:field="*{teamAwayScore}" type="number" class="form__input" id="" placeholder="" required="" />
+																  <input type="number" name="teamAwayScore" th:value="${match.teamAwayScore}" class="form__input" id="" placeholder="" required="" />
 																</div>
 															</td>
 															<td style="max-width:100px;text-align:center;font-weight: bold;" th:text="${match.teamAwayName}"></td>
 															
 															<td style="max-width:50px;text-align:center;font-weight: bold;">
 																<div class="form__group">
-																  <input th:field="*{teamHomeBonus}" type="number" class="form__input" id="" placeholder=""  />
+																  <input type="number" name="teamHomeBonus" th:value="${match.teamHomeBonusPoint}" class="form__input" id="" placeholder=""  />
 																</div>
 															</td>
 															<td style="max-width:50px;text-align:center;font-weight: bold;">
 																<div class="form__group">
-																  <input th:field="*{teamAwayBonus}" type="number" class="form__input" id="" placeholder=""  />
+																  <input type="number"  name="teamAwayBonus" th:value="${match.teamAwayBonusPoint}" class="form__input" id="" placeholder=""  />
 																</div>
 															</td>
 															<td style="max-width:50px;text-align:center;font-weight: bold;">
 																<div class="form__group">
-																  <input  th:field="*{teamHomePenalty}" type="number" class="form__input" id="" placeholder=""  />
+																  <input type="number"  name="teamHomePenalty" th:value="${match.teamHomePenaltyPoint}"   class="form__input" id="" placeholder=""  />
 																</div>
 															</td>
 															<td style="max-width:50px;text-align:center;font-weight: bold;">
 																<div class="form__group">
-																  <input th:field="*{teamAwayPenalty}" type="number" class="form__input" id="" placeholder="" />
+																  <input  type="number" name="teamAwayPenalty" th:value="${match.teamAwayPenaltyPoint}"  class="form__input" id="" placeholder="" />
 																</div>
 															</td>
 															<td style="max-width:50px;text-align:center;font-weight: bold;">
-																<button type="submit" class="btn btn-small"><i class="nav-icon fa fa-save"></i></button>
+																<button type="submit" class="btn btn-small btn-success"><i class="nav-icon fa fa-save"></i></button>
 															</td>
 														</form>
 														
@@ -125,32 +144,53 @@
 				</th:block>
 					
 				</div>
+				<div >
+				</div>
 			</section>
 		</div>
 		<div th:replace="fragments/footer :: footer"></div>
 		<div class="control-sidebar-bg"></div>
 	</div>
 	<div th:replace="fragments/common-scripts :: common-scripts"></div>
+	<script th:inline="javascript">
+		var navigateTo = "";
+		/*<![CDATA[*/
+		    navigateTo = /*[[${navigateTo}]]*/ '';
+		/*]]>*/
+	</script>
 	<script type="text/javascript">
-	var dataTable = null;
-	$(function() {
-		var table = $(".mytable").DataTable({
-			"retrieve" : true,
-			"bSort" : false,
-			"info" : false,
-			"paging" : true,
-			"searching" : false,
-			"paging" : false,
-			"ordering" : false,
-			"autoWidth" : true,
-			"deferLoading" : 57
-		/*"oLanguage": {
-		    "sEmptyTable": "No Coupons found"
-		}*/
+		var dataTable = null;
+		$(document).ready(function(){
+			
+			var table = $(".mytable").DataTable({
+				"retrieve" : true,
+				"bSort" : false,
+				"info" : false,
+				"paging" : true,
+				"searching" : false,
+				"paging" : false,
+				"ordering" : false,
+				"autoWidth" : true,
+				"deferLoading" : 57
+			
+			});
+			dataTable = table;
+			
+			setTimeout(function(){
+				if(navigateTo != "" || navigateTo !=  null)
+				{
+					var scrollId = "#scoreRow"+ navigateTo; 
+					console.log(scrollId);
+					$([document.documentElement, document.body]).animate({
+				        scrollTop: $("#scoreRow"+ navigateTo).offset().top
+				    }, 'slow');
+				}
+			}, 2000);
+			
+			
 		});
-		dataTable = table;
 		
-	});
+		
 	</script>
 	<style>
 	table {
@@ -161,11 +201,22 @@
 	  overflow: auto;   /* Scrollbar is displayed as it's needed */
 	}
 	
-	td, th {
+	tr.border-bottom td {
+        border-bottom: 1pt solid #dddddd;
+     }
+	
+	th {
 	  border: 1px solid #dddddd !important;
-	  text-align: left;
+	  text-align: center;
 	  padding: 8px !important;
 	}
+	
+	td {
+	  border: 1px 0px 1px 0px solid #dddddd !important;
+	  text-align: center;
+	  padding: 8px !important;
+	}
+	
 	
 	/* tr:nth-child(even) {
 	  background-color: #dddddd !important;
@@ -189,40 +240,6 @@
 	  border-bottom: 0.2rem solid #dddddd;
 	  
 	}
-	
-	
-	/* .form__label {
-	  font-family: 'Roboto', sans-serif;
-	  font-size: 1.2rem;
-	  margin-left: 1rem;
-	  margin-top: 0.7rem;
-	  display: block;
-	  transition: all 0.3s;
-	  transform: translateY(0rem);
-	} */
-	
-	/* .form__inputw {
-	  font-family: 'Roboto', sans-serif;
-	  color: #333;
-	  font-size: 0.7rem;
-		margin: 0 auto;
-	  padding: 0.7rem 1rem;
-	  border-radius: 0.1rem;
-	  background-color: rgb(255, 255, 255);
-	  border: none;
-	  width: 90%;
-	  max-width:30px;
-	  display: block;
-	  border-bottom: 0.2rem solid #dddddd;
-	  transition: all 0.3s;
-	}
-	 */
-	/* .form__input:placeholder-shown + .form__label {
-	  opacity: 0;
-	  visibility: hidden;
-	  -webkit-transform: translateY(-4rem);
-	  transform: translateY(-2rem);
-	} */
 	
 	</style>
 	

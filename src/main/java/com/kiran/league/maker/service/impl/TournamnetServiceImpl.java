@@ -94,7 +94,20 @@ public class TournamnetServiceImpl implements TournamnetService {
 
 	@Override
 	public Tournament getTournamentByCode(String code) {
-		return tournamentRepository.findByCode(code);
+		Tournament tournament = tournamentRepository.findByCode(code);
+		if(tournament == null)
+			throw new NoDataFoundException("No tournament found for code: " + code);
+		
+		return tournament;
+	}
+
+	@Override
+	public Tournament getTournamentById(Long id) {
+		Tournament tournament = tournamentRepository.getById(id);
+		if(tournament == null)
+			throw new NoDataFoundException("No tournament found for id: " + id);
+		
+		return tournament;
 	}
 
 }
