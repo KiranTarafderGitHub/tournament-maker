@@ -85,7 +85,7 @@ public class TournamnetServiceImpl implements TournamnetService {
 		else if(TournamentType.RR2L.name().equals(tournamentCreate.getTournamentType()))
 			roundCount =  (finalTeamSize - 1) * TournamentType.RR2L.getLegCount();
 		
-		List<Round> rounds = roundService.createTournamentRound(tournament, roundCount);
+		List<Round> rounds = roundService.createTournamentRound(tournament, roundCount, tournamentCreate.getRoundIntervalDay());
 		
 		matchService.createMatchSchedule(teamList, rounds);
 		

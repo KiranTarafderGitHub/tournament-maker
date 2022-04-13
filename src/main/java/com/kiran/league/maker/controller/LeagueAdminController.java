@@ -1,14 +1,27 @@
 package com.kiran.league.maker.controller;
 
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,16 +31,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiran.league.maker.common.bean.BackupBean;
 import com.kiran.league.maker.common.bean.rest.LeagueTableView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView;
 import com.kiran.league.maker.common.bean.rest.UpdateScorePost;
 import com.kiran.league.maker.persist.dto.User;
 import com.kiran.league.maker.persist.entity.Match;
 import com.kiran.league.maker.persist.entity.Round;
+import com.kiran.league.maker.persist.entity.Team;
 import com.kiran.league.maker.persist.entity.Tournament;
-import com.kiran.league.maker.persist.entity.TournamentType;
 import com.kiran.league.maker.persist.entity.UserEntity;
 import com.kiran.league.maker.service.MatchService;
+import com.kiran.league.maker.service.RoundService;
+import com.kiran.league.maker.service.TeamService;
 import com.kiran.league.maker.service.TournamentAdminService;
 
 @Controller
@@ -41,6 +58,15 @@ public class LeagueAdminController {
 	
 	@Autowired
 	MatchService matchService;
+	
+	@Autowired
+	RoundService roundService;
+	
+	@Autowired
+	TeamService teamService;
+	
+	@Autowired
+	ObjectMapper objectMapper;
 	
 	@Value("${application.url}")
 	String applicationUrl;
@@ -66,7 +92,6 @@ public class LeagueAdminController {
         	}
         	
         	
-        	tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
         	scheduleView = matchService.getScheduleForTournament(tournament);
         	leagueView = matchService.getLeagueStanding(tournament);
         	
@@ -164,6 +189,69 @@ public class LeagueAdminController {
 		}
 		
 		return getUpdateScore(principal,model);
+	}
+	
+	@GetMapping("/backup/create")
+	public ResponseEntity<Resource> createBackup(Principal principal, ModelAndView model, HttpServletRequest request, HttpServletResponse response)
+	{
+		try
+		{
+			UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
+            User user = ((User) _principal.getPrincipal());
+            
+        	Tournament tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
+    		List<Round> rounds = roundService.getRoundsForTournament(tournament);
+    		List<Match> matches = matchService.getAllMatchForRounds(rounds);
+    		List<Team> teams = teamService.getAllTeamOfTournament(tournament);
+    		
+    		BackupBean backupBean = new BackupBean();
+    		
+    		backupBean.setTournament(tournament);
+    		backupBean.setRounds(rounds);
+    		backupBean.setTeams(teams);
+    		backupBean.setMatches(matches);
+    		backupBean.setAdminUser(user);
+    		
+    		String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(backupBean);
+    		
+    	    File tmpFile = File.createTempFile("league-backup", ".json");
+    	    FileWriter writer = new FileWriter(tmpFile);
+    	    writer.write(jsonString);
+    	    writer.close();
+
+    	    InputStreamResource resource = new InputStreamResource(new FileInputStream(tmpFile));
+
+			/*
+			 * ContentDisposition contentDisposition = ContentDisposition.builder("inline")
+			 * .filename("league-backup.json") .build();
+			 */
+    	    HttpHeaders headers = new HttpHeaders();
+            headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+            headers.add("Pragma", "no-cache");
+            headers.add("Expires", "0");
+            //headers.setContentDisposition(contentDisposition);
+            
+    	    
+            return ResponseEntity.ok()
+    	            .headers(headers)
+    	            .contentLength(tmpFile.length())
+    	            .contentType(MediaType.APPLICATION_JSON)
+    	            .body(resource);
+		}
+		catch(Exception e)
+		{
+			log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+            
+            return ResponseEntity.ok()
+    	            .headers(new HttpHeaders())
+    	            .contentLength(0)
+    	            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+    	            .body(null);
+		}
+		
+		
+		
 	}
 	
 	

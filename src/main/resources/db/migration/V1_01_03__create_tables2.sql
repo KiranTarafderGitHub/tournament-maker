@@ -30,6 +30,7 @@ CREATE TABLE `round` (
   `name`                 varchar(100)   NOT NULL,
   `round_number`         int(11)        NOT NULL, 
   `tournament_id`        int(11)        NOT NULL,  
+  `round_date`           DATETIME        NULL,
   
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_tournament_id` 	FOREIGN KEY (`tournament_id`) 	REFERENCES `tournament` (`id`) 	ON DELETE CASCADE

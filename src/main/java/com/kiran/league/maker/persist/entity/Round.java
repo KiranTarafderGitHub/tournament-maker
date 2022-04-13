@@ -1,5 +1,7 @@
 package com.kiran.league.maker.persist.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +23,8 @@ public class Round {
 
 	@ManyToOne
 	private Tournament tournament;
+	
+	private Date roundDate;
 	
 	public Round() {
 		// TODO Auto-generated constructor stub
@@ -58,11 +62,19 @@ public class Round {
 		this.roundNumber = roundNumber;
 	}
 
+	
+	public Date getRoundDate() {
+		return roundDate;
+	}
+
+	public void setRoundDate(Date roundDate) {
+		this.roundDate = roundDate;
+	}
+
 	@Override
 	public String toString() {
 		return "Round [id=" + id + ", name=" + name + ", roundNumber=" + roundNumber + ", tournament=" + tournament
 				+ "]";
 	}
-	
 	
 }

@@ -23,4 +23,6 @@ public interface MatchService {
 	List<Match> getAllMatchForRound(Round round);
 	
 	List<Match> getAllMatchForTeam(Long teamId, Long tournamnetId);
+	
+	List<Match> getAllMatchForRounds(List<Round> rounds);
 }

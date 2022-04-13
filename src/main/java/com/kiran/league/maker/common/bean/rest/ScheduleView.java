@@ -29,6 +29,8 @@ public class ScheduleView {
 		private Integer roundNumber;
 
 		List<MatchView> matches;
+		
+		private Date roundDate;
 
 		public Long getId() {
 			return id;
@@ -60,6 +62,14 @@ public class ScheduleView {
 
 		public void setMatches(List<MatchView> matches) {
 			this.matches = matches;
+		}
+
+		public Date getRoundDate() {
+			return roundDate;
+		}
+
+		public void setRoundDate(Date roundDate) {
+			this.roundDate = roundDate;
 		}
 		
 	}

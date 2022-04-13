@@ -1,6 +1,7 @@
 package com.kiran.league.maker.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -306,7 +307,7 @@ public class MatchServiceImpl implements MatchService {
 		allTeams.forEach(t -> {
 
 			List<String> opponents = individualTeamOpponetList.get(t);
-			log.info(t + "'s remaining opp in Round " + (roundIndex + 1) + " is " + opponents
+			log.info(t + "'s remaining opp in current Leg for Round " + (roundIndex + 1) + " is " + opponents
 					+ " perRoundOpponentList is " + perRoundOpponentList);
 
 			if (!matchDayScheduledTeam.contains(t)) {
@@ -324,7 +325,8 @@ public class MatchServiceImpl implements MatchService {
 						Match match = new Match();
 						Round round = rounds.get(roundIndex);
 
-						match.setMatchDate(new Date());
+						
+						match.setMatchDate(round.getRoundDate());
 						match.setRound(round);
 						match.setTeamHome(homeTeam.getId());
 						match.setTeamAway(opponentTeam.getId());
@@ -336,7 +338,7 @@ public class MatchServiceImpl implements MatchService {
 						// remove the opponent from leg opponent list and round opponent list
 						List<String> remainingOpponentList = new ArrayList<>();
 						opponents.forEach(opp -> {
-							if(!homeTeam.getName().equals(opp))
+							if(!opponentTeam.getName().equals(opp))
 							{
 								remainingOpponentList.add(opp);
 							}
@@ -411,6 +413,18 @@ public class MatchServiceImpl implements MatchService {
 		
 
 		return tmpTeamList.stream().sorted(compareTeam).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Match> getAllMatchForRounds(List<Round> rounds) {
+		List<Match> matchList = new ArrayList<>();
+		
+		if(rounds == null || rounds.isEmpty())
+			return Collections.emptyList();
+		
+		rounds.forEach(r ->   matchList.addAll(getAllMatchForRound(r)));
+		
+		return matchList;
 	}
 
 }

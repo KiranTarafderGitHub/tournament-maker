@@ -9,6 +9,8 @@ public class TournamentCreate {
 	String teams;
 	
 	String email;
+	
+	Integer roundIntervalDay;
 
 	public String getName() {
 		return name;
@@ -41,11 +43,20 @@ public class TournamentCreate {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+
+	public Integer getRoundIntervalDay() {
+		return roundIntervalDay;
+	}
+
+	public void setRoundIntervalDay(Integer roundIntervalDay) {
+		this.roundIntervalDay = roundIntervalDay;
+	}
 
 	@Override
 	public String toString() {
 		return "TournamentCreate [name=" + name + ", tournamentType=" + tournamentType + ", teams=" + teams + ", email="
-				+ email + "]";
+				+ email + ", roundIntervalDay=" + roundIntervalDay + "]";
 	}
 	
 	
