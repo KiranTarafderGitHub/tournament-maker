@@ -154,7 +154,6 @@ public class PublicController {
             model.addObject("tournament",tournament);
         	model.addObject("scheduleView",scheduleView);
         	model.addObject("leagueView",leagueView);
-        	model.addObject("tournament",tournament);
         	model.addObject("tournamentType",TournamentType.values());
         	model.setViewName("public/league/view");
         }
@@ -205,7 +204,6 @@ public class PublicController {
             model.addObject("tournament",tournament);
         	model.addObject("scheduleView",scheduleView);
         	model.addObject("leagueView",leagueView);
-        	model.addObject("tournament",tournament);
         	model.addObject("tournamentType",TournamentType.values());
         	model.setViewName("public/league/view");
         }

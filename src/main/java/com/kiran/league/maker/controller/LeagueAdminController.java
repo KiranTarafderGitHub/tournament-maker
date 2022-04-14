@@ -221,21 +221,17 @@ public class LeagueAdminController {
 
     	    InputStreamResource resource = new InputStreamResource(new FileInputStream(tmpFile));
 
-			/*
-			 * ContentDisposition contentDisposition = ContentDisposition.builder("inline")
-			 * .filename("league-backup.json") .build();
-			 */
+			
+			ContentDisposition contentDisposition = ContentDisposition.builder("inline").filename("league-"+tournament.getCode()+ "-backup.json") .build();
+			 
     	    HttpHeaders headers = new HttpHeaders();
-            headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-            headers.add("Pragma", "no-cache");
-            headers.add("Expires", "0");
-            //headers.setContentDisposition(contentDisposition);
+            headers.setContentDisposition(contentDisposition);
             
     	    
             return ResponseEntity.ok()
     	            .headers(headers)
     	            .contentLength(tmpFile.length())
-    	            .contentType(MediaType.APPLICATION_JSON)
+    	            .contentType(MediaType.APPLICATION_OCTET_STREAM)
     	            .body(resource);
 		}
 		catch(Exception e)
