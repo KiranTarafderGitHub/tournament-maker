@@ -58,6 +58,7 @@
 		<dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
+            <version>5.2.4</version>
         </dependency>
         
         <dependency>
@@ -73,6 +74,16 @@
 		</dependency>
         
         <!-- utility start -->
+        <dependency>
+		    <groupId>com.github.dpaukov</groupId>
+		    <artifactId>combinatoricslib3</artifactId>
+		    <version>3.3.0</version>
+		</dependency>
+       <dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>31.0.1-jre</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
@@ -82,7 +93,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
-		
 		<!-- Dev tools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -98,6 +108,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+	                <executable>true</executable>
+	            </configuration>
 			</plugin>
 		</plugins>
 	</build>

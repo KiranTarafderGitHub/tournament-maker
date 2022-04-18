@@ -21,7 +21,7 @@ CREATE TABLE `tournament_admin` (
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_tournament_admin_tournament_id` 	FOREIGN KEY (`tournament_id`) 	REFERENCES `tournament` (`id`) 	ON DELETE CASCADE,
   CONSTRAINT `FK__tournament_admin_user_id` 	FOREIGN KEY (`user_id`) 	REFERENCES `user` (`id`) 	ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 
 DROP TABLE IF EXISTS `round`;
@@ -34,7 +34,7 @@ CREATE TABLE `round` (
   
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_tournament_id` 	FOREIGN KEY (`tournament_id`) 	REFERENCES `tournament` (`id`) 	ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 
 DROP TABLE IF EXISTS `team`;
@@ -44,7 +44,7 @@ CREATE TABLE `team` (
   `code`                 varchar(10)   NOT NULL,
   
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `match_lu`;
 CREATE TABLE `match_lu` (
@@ -65,5 +65,5 @@ CREATE TABLE `match_lu` (
   
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_round_id` 	FOREIGN KEY (`round_id`) 	REFERENCES `round` (`id`) 	ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
