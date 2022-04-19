@@ -73,22 +73,8 @@ public class MatchServiceImpl implements MatchService {
 			throw new InvalidDataException("Round and team count mismatch");
 		int legCount = totalRoundCount / (totalTeamCount - 1);
 
-		int roundPerLeg = totalRoundCount/legCount;
-		
 		List<Long> teams = teamList.stream().map(t -> t.getId()).collect(Collectors.toList());
 
-		
-		
-//		List<List<Long>> allMatchListInLeg =    Generator.combination(teamIdList).simple(2).stream().collect(Collectors.toList());
-//		
-		//log.info("Total match count in each Leg is : " + allMatchListInLeg.size());
-		/*
-		 * List<MiniMatch> allMiniMatchInLeg = new ArrayList<>();
-		 * if(CollectionUtils.isNotEmpty(allMatchListInLeg)) {
-		 * allMatchListInLeg.forEach(m -> allMiniMatchInLeg.add(new MiniMatch(m.get(0),
-		 * m.get(1)))); }
-		 */
-		
 		
 		List<Match> matches = new ArrayList<>();
 		
@@ -150,40 +136,6 @@ public class MatchServiceImpl implements MatchService {
 
 	}
 	
-	public boolean isMatchSchedulePreviouslyInAnyRound(MiniMatch miniMatch, Map<Integer, Set<MiniMatch>> roundMap)
-	{
-		boolean isPreviouslyScheduler = false;
-		for(Integer roundNumber : roundMap.keySet())
-		{
-			Set<MiniMatch> roundMatches = roundMap.get(roundNumber);
-			if(CollectionUtils.isNotEmpty(roundMatches))
-			{
-				if(roundMatches.contains(miniMatch))
-					isPreviouslyScheduler = true;
-			}
-		}
-		
-		return isPreviouslyScheduler;
-	}
-	
-	public boolean ifTeamsAlreadyScheduledInRound(List<Long> teamIds, Set<MiniMatch> roundMatches)
-	{
-		boolean teamIsScheduled = false;
-		for(MiniMatch m : roundMatches)
-		{
-			for(Long teamId: teamIds)
-			{
-				if(m.getTeamAwayId().intValue() == teamId.intValue() || m.getTeamHomeId().intValue() == teamId.intValue())
-				{
-					teamIsScheduled = true;
-					break;
-				}
-			}
-			
-		}
-		
-		return teamIsScheduled;
-	}
 	
 	@Override
 	public ScheduleView getScheduleForTournament(Tournament tournament) {

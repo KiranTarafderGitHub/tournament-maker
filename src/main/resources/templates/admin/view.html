@@ -125,7 +125,7 @@
 	
 										<table   id="" class="mytable" width="100%">
 											<th:block th:each="round: ${scheduleView.rounds}">
-												<thead style="margin-top: 5px;background-color:#5DADE2;">
+												<thead class="matchdayTableHead" style="margin-top: 5px;background-color:#5DADE2;">
 													<tr>
 														<th style="text-align:left;" colspan="4">Matchday <span th:text="${round.roundNumber}"></span> ( <span th:text="${#dates.format(round.roundDate, 'dd-MM-yyyy')}"></span> )</th>
 														<!-- <th></th>
@@ -189,6 +189,7 @@
 	<script type="text/javascript">
 		var dataTable = null;
 		$(function() {
+			
 			var table = $(".mytable").DataTable({
 				"retrieve" : true,
 				"bSort" : false,
@@ -199,6 +200,18 @@
 				"autoWidth" : true,
 				"deferLoading" : 50
 			
+			});
+			
+			$(".matchdayTableHead").click(function() {
+			    var tableBody = $(this).next();
+			    if($(tableBody).is(":visible"))
+			    {
+			    	$(tableBody).hide();
+			    }
+			    else
+			    {
+			    	$(tableBody).show();
+			    }
 			});
 			
 		}); 
