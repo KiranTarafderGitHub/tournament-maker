@@ -53,6 +53,33 @@
 	                    	</div>
 						</div>
 					</div>
+					
+
+					
+					<th:block th:if="${not #lists.isEmpty(headlines)}">
+						<div class="row">
+							<div class="col-12">
+								<div class="box">
+									<div class="card">
+										<div class="card-header">
+											<div class="tcontainer">
+										        <div class="ticker-wrap">
+										            <div class="ticker-move">
+										                <div class="ticker-item" th:each="headline: ${headlines}" th:text="${headline.description}"></div>
+										                
+										                <div class="ticker-item"> </div>
+										                <div class="ticker-item"> </div>
+										            </div>
+										        </div>
+										    </div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</th:block>
+					
+					
 					<div class="row">
 						<div class="col-12">
 							<div class="box">
@@ -131,8 +158,10 @@
 														<td style="width:20px;text-align:center;" th:text="${iter.count}"></td>
 														<td style="width:100px;text-align:center;font-weight: bold;" th:text="${match.teamHomeName}"></td>
 														<td style="max-width:100px;text-align:center;min-width:50px;" >
-															<span th:if="${match.teamHomeScore != null}" th:text="${match.teamHomeScore} +' - ' + ${match.teamAwayScore}" th:remove="tag">
-															</span>
+															<b>
+																<span th:if="${match.teamHomeScore != null}" th:text="${match.teamHomeScore} +' - ' + ${match.teamAwayScore}" th:remove="tag">
+																</span>
+															</b>
 															<span th:unless="${match.teamHomeScore != null}" th:remove="tag">
 																vs
 															</span>
@@ -232,10 +261,51 @@
 	  padding: 8px !important;
 	}
 	
-	/* tr:nth-child(even) {
-	  background-color: #dddddd !important;
-	} */
+	
+	/* (A) FIXED WRAPPER */
+	.hwrap {
+	  overflow: hidden; /* HIDE SCROLL BAR */
+	}
+	 
 	</style>
+
+	<style>
+    .tcontainer {
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    .ticker-wrap {
+        width: 100%;
+        padding-left: 100%;
+       /*  background-color: #eee; */
+    }
+    
+    @keyframes ticker {
+        100% {
+            transform: translate3d(-100%, 0, 0);
+        }
+    }
+    
+    .ticker-move {
+        display: inline-block;
+        white-space: nowrap;
+        padding-right: 100%;
+        animation-timing-function: linear;
+        animation: ticker linear 25s infinite;
+    }
+    
+    .ticker-move:hover {
+        animation-play-state: paused;
+    }
+    
+    .ticker-item {
+        display: inline-block;
+        padding: 0 60px;
+        font-size: 16px;
+        font-weight:bold;
+    }
+</style>
 	
 </body>
 </html>

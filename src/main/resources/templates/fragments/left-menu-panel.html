@@ -71,6 +71,13 @@
                   <p>Score Update</p>
                 </a>
               </li>
+              
+              <li class="nav-item" sec:authorize="hasAuthority('league.admin')">
+                <a href="/admin/view/headline.html" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p>Headlines</p>
+                </a>
+              </li>
             </ul>
 		  </li>
 		   

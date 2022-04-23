@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,11 +39,13 @@ import com.kiran.league.maker.common.bean.rest.LeagueTableView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView;
 import com.kiran.league.maker.common.bean.rest.UpdateScorePost;
 import com.kiran.league.maker.persist.dto.User;
+import com.kiran.league.maker.persist.entity.Headline;
 import com.kiran.league.maker.persist.entity.Match;
 import com.kiran.league.maker.persist.entity.Round;
 import com.kiran.league.maker.persist.entity.Team;
 import com.kiran.league.maker.persist.entity.Tournament;
 import com.kiran.league.maker.persist.entity.UserEntity;
+import com.kiran.league.maker.service.HeadlineService;
 import com.kiran.league.maker.service.MatchService;
 import com.kiran.league.maker.service.RoundService;
 import com.kiran.league.maker.service.TeamService;
@@ -64,6 +68,9 @@ public class LeagueAdminController {
 	
 	@Autowired
 	TeamService teamService;
+	
+	@Autowired
+	HeadlineService headlineService;
 	
 	@Autowired
 	ObjectMapper objectMapper;
@@ -140,6 +147,7 @@ public class LeagueAdminController {
         
         return model;
     }
+	
 	
 	@GetMapping("/update/score.html")
     public ModelAndView getUpdateScore(Principal principal, ModelAndView model)
@@ -246,9 +254,79 @@ public class LeagueAdminController {
     	            .body(null);
 		}
 		
-		
-		
 	}
+	
+	@GetMapping("/view/headline.html")
+    public ModelAndView viewHeadline(Principal principal, ModelAndView model)
+    {
+		Tournament tournament = new Tournament();
+		List<Headline> headlines = new ArrayList<>();
+		Headline headline = new Headline();
+        try
+        {
+        	UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
+            User user = ((User) _principal.getPrincipal());
+            
+        	tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
+        	headlines = headlineService.getAllHeadline(tournament);
+        	
+        	
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        }
+        model.addObject("tournament",tournament);
+    	model.addObject("headlines",headlines);
+    	model.addObject("headline",headline);
+        model.setViewName("admin/headline");
+        
+        return model;
+    }
+	
+	@PostMapping("/update/headline.html")
+    public ModelAndView updateHeadline(Principal principal, ModelAndView model, @ModelAttribute Headline headline)
+    {
+		Tournament tournament = new Tournament();
+        try
+        {
+        	UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
+            User user = ((User) _principal.getPrincipal());
+            
+        	tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
+        	headline.setTournament(tournament);
+        	
+        	headlineService.saveHeadline(headline);
+        	model.addObject("successMsg","Headline Successfully Saved");
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        }
+        
+        
+        return viewHeadline(principal,model);
+    }
+	
+	@PostMapping("/delete/headline.html")
+    public ModelAndView deleteHeadline(Principal principal, ModelAndView model, @RequestParam(name = "headlineId") Long headlineId)
+    {
+		log.info("delete request recieved with id: " + headlineId);
+        try
+        {
+        	headlineService.deleteHeadline(headlineId);
+        	model.addObject("successMsg","Headline Successfully Deleted");
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        }
+        
+        return viewHeadline(principal,model);
+    }
 	
 	
 	

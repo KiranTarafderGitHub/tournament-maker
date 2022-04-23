@@ -1,5 +1,6 @@
 package com.kiran.league.maker.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +26,13 @@ import com.kiran.league.maker.common.bean.rest.TournamentCreate;
 import com.kiran.league.maker.common.exception.InvalidDataException;
 import com.kiran.league.maker.common.exception.NoDataFoundException;
 import com.kiran.league.maker.persist.dto.User;
+import com.kiran.league.maker.persist.entity.Headline;
 import com.kiran.league.maker.persist.entity.Match;
 import com.kiran.league.maker.persist.entity.Round;
 import com.kiran.league.maker.persist.entity.Tournament;
 import com.kiran.league.maker.persist.entity.TournamentType;
 import com.kiran.league.maker.persist.entity.UserEntity;
+import com.kiran.league.maker.service.HeadlineService;
 import com.kiran.league.maker.service.MatchService;
 import com.kiran.league.maker.service.TournamentAdminService;
 import com.kiran.league.maker.service.TournamnetService;
@@ -46,6 +49,9 @@ public class PublicController {
 	
 	@Autowired
 	TournamentAdminService tournamentAdminService;
+	
+	@Autowired
+	HeadlineService headlineService;
 	
 	@Autowired
 	MatchService matchService;
@@ -144,17 +150,19 @@ public class PublicController {
         	Tournament tournament = new Tournament();
     		ScheduleView scheduleView = new ScheduleView();
     		LeagueTableView leagueView = new LeagueTableView();
+    		List<Headline> headlines = new ArrayList<>();
             
             	
         	tournament = tournamnetService.getTournamentByCode(leagueCode);
         	scheduleView = matchService.getScheduleForTournament(tournament);
         	leagueView = matchService.getLeagueStanding(tournament);
-            	
+            headlines = headlineService.getAllHeadline(tournament);
            
             model.addObject("tournament",tournament);
         	model.addObject("scheduleView",scheduleView);
         	model.addObject("leagueView",leagueView);
         	model.addObject("tournamentType",TournamentType.values());
+        	model.addObject("headlines",headlines);
         	model.setViewName("public/league/view");
         }
         catch (Exception e)
@@ -194,17 +202,19 @@ public class PublicController {
         	Tournament tournament = new Tournament();
     		ScheduleView scheduleView = new ScheduleView();
     		LeagueTableView leagueView = new LeagueTableView();
-            
+    		List<Headline> headlines = new ArrayList<>();
             	
         	tournament = tournamnetService.getTournamentByCode(codeBean.getCode());
         	scheduleView = matchService.getScheduleForTournament(tournament);
         	leagueView = matchService.getLeagueStanding(tournament);
-            	
+            headlines = headlineService.getAllHeadline(tournament);
+
            
             model.addObject("tournament",tournament);
         	model.addObject("scheduleView",scheduleView);
         	model.addObject("leagueView",leagueView);
         	model.addObject("tournamentType",TournamentType.values());
+        	model.addObject("headlines",headlines);
         	model.setViewName("public/league/view");
         }
         catch (Exception e)
