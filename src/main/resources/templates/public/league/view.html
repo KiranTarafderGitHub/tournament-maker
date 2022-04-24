@@ -153,7 +153,7 @@
 														<th></th> -->
 													</tr>
 												</thead>
-												<tbody>
+												<tbody class="defaultHidden">
 													<tr class="border-bottom" style="text-align:center;"  th:each="match,iter: ${round.matches}">
 														<td style="width:20px;text-align:center;" th:text="${iter.count}"></td>
 														<td style="width:100px;text-align:center;font-weight: bold;" th:text="${match.teamHomeName}"></td>
@@ -212,7 +212,7 @@
 	<script type="text/javascript">
 		var dataTable = null;
 		$(function() {
-			var table = $(".mytable").DataTable({
+			var table = $(".#table").DataTable({
 				"retrieve" : true,
 				"bSort" : false,
 				"info" : false,
@@ -223,6 +223,8 @@
 				"deferLoading" : 50
 			
 			});
+			
+			$('.defaultHidden').hide();
 			
 		}); 
 		
@@ -237,6 +239,7 @@
 		    	$(tableBody).show();
 		    }
 		});
+		
 	</script>
 	<style>
 	table {
