@@ -468,4 +468,29 @@ public class MatchServiceImpl implements MatchService {
 		return matchList;
 	}
 
+
+	@Override
+	public void addMatchForNewTeam(Round round, Team team) {
+		// TODO Auto-generated method stub
+		List<Team> existingTeam = teamService.getAllTeamOfTournament(round.getTournament());
+		List<Match> allMatchesForNewTeam = new ArrayList<>();
+		
+		existingTeam.forEach(et -> {
+			
+			if(team.getId() != et.getId())
+			{
+				Match match = new Match();
+				match.setTeamHome(team.getId());
+				match.setTeamAway(et.getId());
+				match.setMatchDate(round.getRoundDate());
+				match.setRound(round);
+				
+				allMatchesForNewTeam.add(match);
+
+			}
+		});
+		
+		matchRepository.saveAllAndFlush(allMatchesForNewTeam);
+	}
+
 }

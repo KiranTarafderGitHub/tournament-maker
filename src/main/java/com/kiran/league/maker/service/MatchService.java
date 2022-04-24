@@ -25,4 +25,6 @@ public interface MatchService {
 	List<Match> getAllMatchForTeam(Long teamId, Long tournamnetId);
 	
 	List<Match> getAllMatchForRounds(List<Round> rounds);
+	
+	public void addMatchForNewTeam(Round round, Team team);
 }

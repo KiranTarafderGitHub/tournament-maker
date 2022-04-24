@@ -10,5 +10,7 @@ public interface RoundService {
 	List<Round> createTournamentRound(Tournament tournament,int roundCount, int roundIntervalDay);
 	
 	public List<Round> getRoundsForTournament(Tournament tournament);
+	
+	public Round addRoundToExistingTournament(Tournament tournament);
 
 }

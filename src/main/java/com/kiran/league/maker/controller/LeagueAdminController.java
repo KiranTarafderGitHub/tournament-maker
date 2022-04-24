@@ -50,6 +50,7 @@ import com.kiran.league.maker.service.MatchService;
 import com.kiran.league.maker.service.RoundService;
 import com.kiran.league.maker.service.TeamService;
 import com.kiran.league.maker.service.TournamentAdminService;
+import com.kiran.league.maker.service.TournamnetService;
 
 @Controller
 @RequestMapping("/admin")
@@ -74,6 +75,9 @@ public class LeagueAdminController {
 	
 	@Autowired
 	ObjectMapper objectMapper;
+	
+	@Autowired
+	TournamnetService tournamnetService;
 	
 	@Value("${application.url}")
 	String applicationUrl;
@@ -326,6 +330,54 @@ public class LeagueAdminController {
         }
         
         return viewHeadline(principal,model);
+    }
+	
+	@GetMapping("/add/team.html")
+    public ModelAndView getAddTeam(Principal principal, ModelAndView model)
+    {
+		Tournament tournament = new Tournament();
+
+        try
+        {
+        	UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
+            User user = ((User) _principal.getPrincipal());
+
+            tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
+        	
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        }
+        model.addObject("tournament",tournament);
+        model.setViewName("admin/teams");
+        
+        return model;
+    }
+	
+	@PostMapping("/add/team.html")
+    public ModelAndView postAddTeam(Principal principal, ModelAndView model, @RequestParam(name = "name") String name)
+    {
+		Tournament tournament = new Tournament();
+        try
+        {
+        	UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
+            User user = ((User) _principal.getPrincipal());
+            
+        	tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
+        	tournamnetService.addTeamToExistingTournament(tournament, name);
+        	
+        	model.addObject("successMsg","Headline Successfully Saved");
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        }
+        
+        
+        return getAddTeam(principal,model);
     }
 	
 	

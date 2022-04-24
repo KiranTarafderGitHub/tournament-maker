@@ -1,5 +1,6 @@
 package com.kiran.league.maker.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -106,6 +107,31 @@ public class TournamnetServiceImpl implements TournamnetService {
 		Tournament tournament = tournamentRepository.getById(id);
 		if(tournament == null)
 			throw new NoDataFoundException("No tournament found for id: " + id);
+		
+		return tournament;
+	}
+
+	@Override
+	public Tournament addTeamToExistingTournament(Tournament tournament, String teamName) {
+		
+		List<String> teamNames = new ArrayList<>();
+		teamNames.add(teamName);
+		
+		
+		List<Team> newTeamList = teamService.createTeam(teamNames);
+		if(TournamentType.RR1L.name().equals(tournament.getTournamentType()))
+		{
+			Round round = roundService.addRoundToExistingTournament(tournament);
+			matchService.addMatchForNewTeam(round, newTeamList.get(0));
+		}
+		else if(TournamentType.RR2L.name().equals(tournament.getTournamentType()))
+		{
+			Round round = roundService.addRoundToExistingTournament(tournament);
+			matchService.addMatchForNewTeam(round, newTeamList.get(0));
+			
+			Round round2 = roundService.addRoundToExistingTournament(tournament);
+			matchService.addMatchForNewTeam(round2, newTeamList.get(0));
+		}
 		
 		return tournament;
 	}

@@ -2,6 +2,7 @@ package com.kiran.league.maker.service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,24 @@ public class RoundServiceImpl implements RoundService {
 	@Override
 	public List<Round> getRoundsForTournament(Tournament tournament) {
 		return roundRepository.findByTournament(tournament);
+	}
+
+	@Override
+	public Round addRoundToExistingTournament(Tournament tournament) {
+		
+		Integer maxRound = roundRepository.findLastRoundNumberForTournament(tournament.getId());
+		Date lastRoundDate = roundRepository.findLastRoundDateForTournament(tournament.getId());
+		
+		Round round = new Round();
+		int roundNumber = maxRound + 1;
+		round.setName("Round " + roundNumber);
+		round.setRoundNumber(roundNumber);
+		round.setRoundDate(lastRoundDate);
+		round.setTournament(tournament);
+		
+		roundRepository.saveAndFlush(round);
+		
+		return round;
 	}
 
 }
