@@ -162,7 +162,7 @@
 		var dataTable = null;
 		$(document).ready(function(){
 			
-			var table = $("#table").DataTable({
+			var table = $(".mytable").DataTable({
 				"retrieve" : true,
 				"bSort" : false,
 				"info" : false,
@@ -188,7 +188,7 @@
 			}, 2000);
 			
 			
-			$('.defaultHidden').hide();
+			//$('.defaultHidden').hide();
 		});
 		
 		$(".scheduleHeader").click(function() {

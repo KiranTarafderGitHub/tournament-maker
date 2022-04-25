@@ -139,6 +139,130 @@
 						<div class="col-12">
 							<div class="box">
 								<div class="card">
+									<div class="card-header toggledVisibility" >
+										<h3 class="card-title">League Stats</h3>
+									</div>
+									<div class="card-body defaultHidden">
+									
+										<div class="row">
+											<div class="col-sm-12 col-md-6">
+												<table   id="topSocrer" class="mytable">
+													<thead class="matchdayTableHead" style="margin-top: 5px;background-color:#5DADE2;">
+														<tr>
+															<th style="text-align:left;" colspan="3"> Top Scorer</th>
+															
+														</tr>
+													</thead>
+													<tbody class="">
+														<tr class="border-bottom" style="text-align:left;"  th:each="stat,iter: ${statView.topScorers}" th:if="${iter.count <= 5 }">
+															<td style="width:25px;text-align:left;" th:text="${iter.count}"></td>
+															<td style="width:40%;text-align:left;font-weight: bold;" th:text="${stat.name}"></td>
+															<td style="text-align:left;font-weight: bold;" th:text="${stat.goalForwarded}"></td>
+															
+														</tr>
+													</tbody>
+		
+												</table>
+											</div>
+											
+											<div class="col-sm-12 col-md-6">
+												<table   id="topGoalPerMatch" class="mytable">
+													<thead class="matchdayTableHead" style="margin-top: 5px;background-color:#5DADE2;">
+														<tr>
+															<th style="text-align:left;" colspan="3"> Goals Per Match</th>
+															
+														</tr>
+													</thead>
+													<tbody class="">
+														<tr class="border-bottom" style="text-align:left;"  th:each="stat,iter: ${statView.goalPerMatch}" th:if="${iter.count <= 5 }">
+															<td style="width:25px;text-align:left;" th:text="${iter.count}"></td>
+															<td style="width:40%;text-align:left;font-weight: bold;" th:text="${stat.name}"></td>
+															<td style="text-align:left;font-weight: bold;" th:text="${stat.goalsPerMatch}"></td>
+															
+														</tr>
+													</tbody>
+		
+												</table>
+											</div>
+											
+											
+											<div class="col-sm-12 col-md-6">
+												<table   id="topCleanSheets" class="mytable">
+													<thead class="matchdayTableHead" style="margin-top: 5px;background-color:#5DADE2;">
+														<tr>
+															<th style="text-align:left;" colspan="3"> CleanSheet </th>
+															
+														</tr>
+													</thead>
+													<tbody class="">
+														<tr class="border-bottom" style="text-align:left;"  th:each="stat,iter: ${statView.cleansheets}" th:if="${iter.count <= 5 }">
+															<td style="width:25px;text-align:left;" th:text="${iter.count}"></td>
+															<td style="width:40%;text-align:left;font-weight: bold;" th:text="${stat.name}"></td>
+															<td style="text-align:left;font-weight: bold;" th:text="${stat.cleanSheet}"></td>
+															
+														</tr>
+													</tbody>
+		
+												</table>
+											</div>
+											
+											<div class="col-sm-12 col-md-6">
+												<table   id="topConceded" class="mytable">
+													<thead class="matchdayTableHead" style="margin-top: 5px;background-color:#5DADE2;">
+														<tr>
+															<th style="text-align:left;" colspan="3"> Goals Conceded </th>
+															
+														</tr>
+													</thead>
+													<tbody class="">
+														<tr class="border-bottom" style="text-align:left;"  th:each="stat,iter: ${statView.topConceded}" th:if="${iter.count <= 5 }">
+															<td style="width:25px;text-align:left;" th:text="${iter.count}"></td>
+															<td style="width:40%;text-align:left;font-weight: bold;" th:text="${stat.name}"></td>
+															<td style="text-align:left;font-weight: bold;" th:text="${stat.goalAlloted}"></td>
+															
+														</tr>
+													</tbody>
+		
+												</table>
+											</div>
+											
+											<div class="col-sm-12 col-md-6">
+												<table   id="topPointsPerMatch" class="mytable">
+													<thead class="matchdayTableHead" style="margin-top: 5px;background-color:#5DADE2;">
+														<tr>
+															<th style="text-align:left;" colspan="3"> Points Per Match </th>
+															
+														</tr>
+													</thead>
+													<tbody class="">
+														<tr class="border-bottom" style="text-align:left;"  th:each="stat,iter: ${statView.pointsPerGame}" th:if="${iter.count <= 5 }">
+															<td style="width:25px;text-align:left;" th:text="${iter.count}"></td>
+															<td style="width:40%;text-align:left;font-weight: bold;" th:text="${stat.name}"></td>
+															<td style="text-align:left;font-weight: bold;" th:text="${stat.pointsPerMatch}"></td>
+															
+														</tr>
+													</tbody>
+		
+												</table>
+											</div>
+										
+										
+										</div>
+										
+										
+										
+										
+									
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="card">
 									<div class="card-header">
 										<h3 class="card-title">Schedule</h3>
 									</div>
@@ -212,7 +336,7 @@
 	<script type="text/javascript">
 		var dataTable = null;
 		$(function() {
-			var table = $(".#table").DataTable({
+			var table = $("#table").DataTable({
 				"retrieve" : true,
 				"bSort" : false,
 				"info" : false,
@@ -239,6 +363,20 @@
 		    	$(tableBody).show();
 		    }
 		});
+		
+		$(".toggledVisibility").click(function() {
+		    var div = $(this).next();
+		    if($(div).is(":visible"))
+		    {
+		    	$(div).hide();
+		    }
+		    else
+		    {
+		    	$(div).show();
+		    }
+		});
+		
+		
 		
 	</script>
 	<style>

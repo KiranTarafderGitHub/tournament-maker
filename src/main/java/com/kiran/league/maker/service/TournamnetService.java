@@ -13,4 +13,5 @@ public interface TournamnetService {
 	public Tournament getTournamentById(Long id);
 	
 	public Tournament addTeamToExistingTournament(Tournament tournament, String teamName);
+	
 }

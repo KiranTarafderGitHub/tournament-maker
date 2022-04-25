@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.kiran.league.maker.common.bean.rest.LeagueTableView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView;
+import com.kiran.league.maker.common.bean.rest.StatView;
+import com.kiran.league.maker.common.bean.rest.TournamentSummaryView;
 import com.kiran.league.maker.common.bean.rest.UpdateScorePost;
 import com.kiran.league.maker.persist.entity.Match;
 import com.kiran.league.maker.persist.entity.Round;
@@ -27,4 +29,8 @@ public interface MatchService {
 	List<Match> getAllMatchForRounds(List<Round> rounds);
 	
 	public void addMatchForNewTeam(Round round, Team team);
+	
+	public StatView getLeagueStats(Tournament tournament);
+	
+	public TournamentSummaryView getTournamentSummary(Tournament tournament);
 }

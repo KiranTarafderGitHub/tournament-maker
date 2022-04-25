@@ -1,31 +1,30 @@
 package com.kiran.league.maker.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.paukov.combinatorics3.Generator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
-import com.kiran.league.maker.common.bean.MiniMatch;
 import com.kiran.league.maker.common.bean.rest.LeagueTableView;
 import com.kiran.league.maker.common.bean.rest.LeagueTableView.TeamSummaryView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView.MatchView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView.RoundView;
+import com.kiran.league.maker.common.bean.rest.StatView;
+import com.kiran.league.maker.common.bean.rest.StatView.TeamStatView;
+import com.kiran.league.maker.common.bean.rest.TournamentSummaryView;
 import com.kiran.league.maker.common.bean.rest.UpdateScorePost;
 import com.kiran.league.maker.common.exception.InvalidDataException;
 import com.kiran.league.maker.persist.dao.MatchRepository;
@@ -181,6 +180,7 @@ public class MatchServiceImpl implements MatchService {
 	
 	@Override
 	public LeagueTableView getLeagueStanding(Tournament tournament) {
+		
 		LeagueTableView leagueTableView = new LeagueTableView();
 		List<TeamSummaryView> teamSummaryList = new ArrayList<>();
 		
@@ -455,6 +455,32 @@ public class MatchServiceImpl implements MatchService {
 
 		return tmpTeamList.stream().sorted(compareTeam).collect(Collectors.toList());
 	}
+	
+	public StatView sortTeamForLeagueStat(StatView statView)
+	{
+		StatView tmpStatView = new StatView();
+		
+		List<TeamStatView> tmpCleanSheetList = new ArrayList<>();
+		List<TeamStatView> tmpGoalPerMatchList = new ArrayList<>();
+		List<TeamStatView> tmpPointsPerGameList = new ArrayList<>();
+		List<TeamStatView> tmpTopConceded = new ArrayList<>();
+		List<TeamStatView> tmpTopScorersList = new ArrayList<>();
+
+		
+		statView.getCleansheets().forEach(t -> tmpCleanSheetList.add(t));
+		statView.getGoalPerMatch().forEach(t -> tmpGoalPerMatchList.add(t));
+		statView.getPointsPerGame().forEach(t -> tmpPointsPerGameList.add(t));
+		statView.getTopConceded().forEach(t -> tmpTopConceded.add(t));
+		statView.getTopScorers().forEach(t -> tmpTopScorersList.add(t));
+		
+		tmpStatView.setCleansheets(tmpCleanSheetList.stream().sorted(Comparator.comparing( TeamStatView::getCleanSheet).reversed()).collect(Collectors.toList()));
+		tmpStatView.setGoalPerMatch(tmpGoalPerMatchList.stream().sorted(Comparator.comparing( TeamStatView::getGoalsPerMatch).reversed()).collect(Collectors.toList()));
+		tmpStatView.setPointsPerGame(tmpPointsPerGameList.stream().sorted(Comparator.comparing( TeamStatView::getPointsPerMatch).reversed()).collect(Collectors.toList()));
+		tmpStatView.setTopConceded(tmpTopConceded.stream().sorted(Comparator.comparing( TeamStatView::getGoalAlloted).reversed()).collect(Collectors.toList()));
+		tmpStatView.setTopScorers(tmpTopScorersList.stream().sorted(Comparator.comparing( TeamStatView::getGoalForwarded).reversed()).collect(Collectors.toList()));
+		
+		return tmpStatView;
+	}
 
 	@Override
 	public List<Match> getAllMatchForRounds(List<Round> rounds) {
@@ -491,6 +517,178 @@ public class MatchServiceImpl implements MatchService {
 		});
 		
 		matchRepository.saveAllAndFlush(allMatchesForNewTeam);
+	}
+
+
+	@Override
+	public StatView getLeagueStats(Tournament tournament) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public TournamentSummaryView getTournamentSummary(Tournament tournament) {
+		
+		TournamentSummaryView tournamentSummaryView = new TournamentSummaryView();
+		
+		LeagueTableView leagueTableView = new LeagueTableView();
+		List<TeamSummaryView> teamSummaryList = new ArrayList<>();
+
+		
+		StatView statView = new StatView();
+		List<TeamStatView> topScorerList = new ArrayList<>();
+		List<TeamStatView> topConcededList = new ArrayList<>();
+		List<TeamStatView> goalPerMatchList = new ArrayList<>();
+		List<TeamStatView> cleansheetList = new ArrayList<>();
+		List<TeamStatView> pointsPerGameList = new ArrayList<>();
+		
+		
+		
+		List<Team> allTeam = teamService.getAllTeamOfTournament(tournament);
+		for(Team t: allTeam)
+		{
+			int totalBonus=0;int totalPenalty=0;int totalPoint=0;int matchPlayed=0;int matchWon = 0;
+			int matchDraw=0;int matchLost=0;int goalScored = 0;int goalConceded = 0;int goalDifference=0;
+			
+			int cleanSheet=0;
+			
+			TeamSummaryView tsView = new TeamSummaryView();
+			TeamStatView teamStatView = new TeamStatView();
+			
+			tsView.setTeamId(t.getId());
+			tsView.setTeamName(t.getName());
+			
+			teamStatView.setId(t.getId());
+			teamStatView.setName(t.getName());
+			
+			List<Match> matchList = getAllMatchForTeam(t.getId(),tournament.getId());
+			for(Match m : matchList)
+			{
+				if(m.getTeamHome().intValue() == t.getId().intValue())
+				{
+					if( m.getTeamHomeScore() != null )
+					{
+						matchPlayed++;
+						goalScored += m.getTeamHomeScore().intValue();
+						goalConceded += m.getTeamAwayScore().intValue();
+						totalBonus += ( m.getTeamHomeBonusPoint() != null ? m.getTeamHomeBonusPoint().intValue() : 0);
+						totalPenalty += ( m.getTeamHomePenaltyPoint() != null ? m.getTeamHomePenaltyPoint().intValue() : 0);
+						
+						if(m.getTeamHomeScore().intValue() > m.getTeamAwayScore().intValue())
+						{
+							matchWon++;
+							totalPoint += Result.WIN.getPoint().intValue();
+						}
+						else if(m.getTeamHomeScore().intValue() == m.getTeamAwayScore().intValue())
+						{
+							matchDraw++;
+							totalPoint += Result.DRAW.getPoint().intValue();
+						}
+						else
+						{
+							matchLost++;
+							totalPoint += Result.LOSS.getPoint().intValue();
+						}
+						
+						if(m.getTeamAwayScore().intValue() == 0)
+							cleanSheet++;
+					}
+				}
+				else if(m.getTeamAway().intValue() == t.getId().intValue())
+				{
+					if( m.getTeamAwayScore() != null )
+					{
+						matchPlayed++;
+						goalScored += m.getTeamAwayScore().intValue();
+						goalConceded += m.getTeamHomeScore().intValue();
+						totalBonus += ( m.getTeamAwayBonusPoint() != null ? m.getTeamAwayBonusPoint().intValue() : 0);
+						totalPenalty += ( m.getTeamAwayPenaltyPoint() != null ? m.getTeamAwayPenaltyPoint().intValue() : 0);
+						
+						if(m.getTeamAwayScore().intValue() > m.getTeamHomeScore().intValue())
+						{
+							matchWon++;
+							totalPoint += Result.WIN.getPoint().intValue();
+						}
+						else if(m.getTeamAwayScore().intValue() ==  m.getTeamHomeScore().intValue())
+						{
+							matchDraw++;
+							totalPoint += Result.DRAW.getPoint().intValue();
+						}
+						else
+						{
+							matchLost++;
+							totalPoint += Result.LOSS.getPoint().intValue();
+						}
+						
+						if(m.getTeamHomeScore().intValue() == 0)
+							cleanSheet++;
+					}
+				}
+			}
+			
+			totalPoint += (totalBonus - totalPenalty);
+			goalDifference = goalScored - goalConceded;
+			
+			tsView.setMatchPlayed(matchPlayed);
+			tsView.setMatchWon(matchWon);
+			tsView.setMatchDraw(matchDraw);
+			tsView.setMatchLost(matchLost);
+			tsView.setGoalScored(goalScored);
+			tsView.setGoalConceded(goalConceded);
+			tsView.setGoalDifference(goalDifference);
+			tsView.setTotalBonusPoint(totalBonus);
+			tsView.setTotalPenaltyPoint(totalPenalty);
+			tsView.setTotalPoints(totalPoint);
+			
+			teamSummaryList.add(tsView);
+			
+			double goalPerMatch = (double) goalScored / (double) matchPlayed;
+			double pointPerMatch = (double) totalPoint / (double) matchPlayed;
+			
+			goalPerMatch = round(goalPerMatch, 2);
+			pointPerMatch = round(pointPerMatch, 2);
+			
+			teamStatView.setGoalForwarded(goalScored);
+			teamStatView.setGoalAlloted(goalConceded);
+			teamStatView.setGoalsPerMatch(goalPerMatch);
+			teamStatView.setPointsPerMatch(pointPerMatch);
+			teamStatView.setCleanSheet(cleanSheet);
+			
+			topScorerList.add(teamStatView);
+			topConcededList.add(teamStatView);
+			goalPerMatchList.add(teamStatView);
+			cleansheetList.add(teamStatView);
+			pointsPerGameList.add(teamStatView);
+			
+			
+		}
+		
+		
+		StatView tmpStatView = new StatView();
+		tmpStatView.setCleansheets(cleansheetList);
+		tmpStatView.setGoalPerMatch(goalPerMatchList);
+		tmpStatView.setPointsPerGame(pointsPerGameList);
+		tmpStatView.setTopConceded(topConcededList);
+		tmpStatView.setTopScorers(topScorerList);
+		
+		List<TeamSummaryView> sortedTeamList = sortTeamForLeague(teamSummaryList);
+		statView = sortTeamForLeagueStat(tmpStatView);
+		
+		leagueTableView.setTeams(sortedTeamList);
+		
+		tournamentSummaryView.setLeagueTableView(leagueTableView);
+		tournamentSummaryView.setStatView(statView);
+		
+		return tournamentSummaryView;
+	}
+	
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = BigDecimal.valueOf(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
 	}
 
 }

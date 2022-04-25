@@ -22,7 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kiran.league.maker.common.bean.rest.CodeBean;
 import com.kiran.league.maker.common.bean.rest.LeagueTableView;
 import com.kiran.league.maker.common.bean.rest.ScheduleView;
+import com.kiran.league.maker.common.bean.rest.StatView;
 import com.kiran.league.maker.common.bean.rest.TournamentCreate;
+import com.kiran.league.maker.common.bean.rest.TournamentSummaryView;
 import com.kiran.league.maker.common.exception.InvalidDataException;
 import com.kiran.league.maker.common.exception.NoDataFoundException;
 import com.kiran.league.maker.persist.dto.User;
@@ -148,19 +150,20 @@ public class PublicController {
         try
         {
         	Tournament tournament = new Tournament();
+        	TournamentSummaryView tournamentSummaryView = new TournamentSummaryView();
     		ScheduleView scheduleView = new ScheduleView();
-    		LeagueTableView leagueView = new LeagueTableView();
     		List<Headline> headlines = new ArrayList<>();
             
             	
         	tournament = tournamnetService.getTournamentByCode(leagueCode);
         	scheduleView = matchService.getScheduleForTournament(tournament);
-        	leagueView = matchService.getLeagueStanding(tournament);
+        	tournamentSummaryView = matchService.getTournamentSummary(tournament);
             headlines = headlineService.getAllHeadline(tournament);
            
             model.addObject("tournament",tournament);
         	model.addObject("scheduleView",scheduleView);
-        	model.addObject("leagueView",leagueView);
+        	model.addObject("leagueView",tournamentSummaryView.getLeagueTableView());
+        	model.addObject("statView",tournamentSummaryView.getStatView());
         	model.addObject("tournamentType",TournamentType.values());
         	model.addObject("headlines",headlines);
         	model.setViewName("public/league/view");
@@ -200,19 +203,21 @@ public class PublicController {
 		try
         {
         	Tournament tournament = new Tournament();
+        	TournamentSummaryView tournamentSummaryView = new TournamentSummaryView();
     		ScheduleView scheduleView = new ScheduleView();
     		LeagueTableView leagueView = new LeagueTableView();
     		List<Headline> headlines = new ArrayList<>();
             	
         	tournament = tournamnetService.getTournamentByCode(codeBean.getCode());
         	scheduleView = matchService.getScheduleForTournament(tournament);
-        	leagueView = matchService.getLeagueStanding(tournament);
+        	tournamentSummaryView = matchService.getTournamentSummary(tournament);
             headlines = headlineService.getAllHeadline(tournament);
 
            
             model.addObject("tournament",tournament);
         	model.addObject("scheduleView",scheduleView);
-        	model.addObject("leagueView",leagueView);
+        	model.addObject("leagueView",tournamentSummaryView.getLeagueTableView());
+        	model.addObject("statView",tournamentSummaryView.getStatView());
         	model.addObject("tournamentType",TournamentType.values());
         	model.addObject("headlines",headlines);
         	model.setViewName("public/league/view");
