@@ -6,6 +6,8 @@ This is a Spring Boot Java Web Application to create tournament primarily based 
 Update scores as admin. Separate url for league players.
 Convenient view for League Standing, Statistics and Schedule.
 
+url: https://github.com/KiranTarafderGitHub/tournament-maker/
+
 # Requirements to build the project:
 
 Java 11 or higher
