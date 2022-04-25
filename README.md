@@ -2,10 +2,9 @@
 
 Tournament Maker
 
-This is a Spring Boot Java Application to create tournament primarily based on League system. Leagues is created using round robin scheduling with option 
-for single leg and double leg rounds. 
-Update socres as admin. Seperate url for league players.
-Convinient view for League Standing, Statistics and Schedule.
+This is a Spring Boot Java Web Application to create tournament primarily based on League system. Leagues is created using round robin scheduling with option for single leg and double leg rounds. 
+Update scores as admin. Separate url for league players.
+Convenient view for League Standing, Statistics and Schedule.
 
 # Requirements to build the project:
 
