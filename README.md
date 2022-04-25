@@ -6,15 +6,16 @@ This is a Spring Boot Java Application to create tournament primarily based on L
 for single leg and double leg rounds.
 
 Requirements to build the project:
+
 Java 11 or higher
-Eclipse ide + spring tool suite
-Spring Booot 2.1.8 or higher
-Mysql or Mariadb
+Eclipse / Intellij IDE,  Spring Tool Suite, Spring Booot 2.1.8 or higher and Mysql or Mariadb
 
 Process Flows
-Clone the repository
-Import as maven project
-Build
-Configure the server port in application property files
-Configure the log4j xml file for logging
-Run the project
+
+1. Clone the repository
+2. Import as maven project
+3. Build as maven project
+4. Configure the server port in application property files
+5. Configure the log4j xml file for logging
+6. Run the project
+
