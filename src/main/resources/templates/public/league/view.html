@@ -210,12 +210,31 @@
 												<table   id="topConceded" class="mytable">
 													<thead class="matchdayTableHead" style="margin-top: 5px;background-color:#5DADE2;">
 														<tr>
-															<th style="text-align:left;" colspan="3"> Goals Conceded </th>
+															<th style="text-align:left;" colspan="3"> Most Goals Conceded </th>
 															
 														</tr>
 													</thead>
 													<tbody class="">
 														<tr class="border-bottom" style="text-align:left;"  th:each="stat,iter: ${statView.topConceded}" th:if="${iter.count <= 5 }">
+															<td style="width:25px;text-align:left;" th:text="${iter.count}"></td>
+															<td style="width:40%;text-align:left;font-weight: bold;" th:text="${stat.name}"></td>
+															<td style="text-align:left;font-weight: bold;" th:text="${stat.goalAlloted}"></td>
+															
+														</tr>
+													</tbody>
+		
+												</table>
+											</div>
+											
+											<div class="col-sm-12 col-md-6">
+												<table   id="topConcededPerMatch" class="mytable">
+													<thead class="matchdayTableHead" style="margin-top: 5px;background-color:#5DADE2;">
+														<tr>
+															<th style="text-align:left;" colspan="3"> Goals Conceded Per Match </th>
+														</tr>
+													</thead>
+													<tbody class="">
+														<tr class="border-bottom" style="text-align:left;"  th:each="stat,iter: ${statView.goalsConcededPerGame}" th:if="${iter.count <= 5 }">
 															<td style="width:25px;text-align:left;" th:text="${iter.count}"></td>
 															<td style="width:40%;text-align:left;font-weight: bold;" th:text="${stat.name}"></td>
 															<td style="text-align:left;font-weight: bold;" th:text="${stat.goalAlloted}"></td>

@@ -14,6 +14,8 @@ public class StatView {
 	
 	List<TeamStatView> pointsPerGame;
 	
+	List<TeamStatView> goalsConcededPerGame;
+	
 	
 	public List<TeamStatView> getTopScorers() {
 		return topScorers;
@@ -56,6 +58,16 @@ public class StatView {
 	}
 
 
+	public List<TeamStatView> getGoalsConcededPerGame() {
+		return goalsConcededPerGame;
+	}
+
+	public void setGoalsConcededPerGame(List<TeamStatView> goalsConcededPerGame) {
+		this.goalsConcededPerGame = goalsConcededPerGame;
+	}
+
+
+
 
 
 	public static class TeamStatView
@@ -73,6 +85,8 @@ public class StatView {
 		Integer cleanSheet;
 		
 		Double pointsPerMatch;
+		
+		Double goalConcededPerGame;
 
 		public Long getId() {
 			return id;
@@ -128,6 +142,14 @@ public class StatView {
 
 		public void setPointsPerMatch(Double pointsPerMatch) {
 			this.pointsPerMatch = pointsPerMatch;
+		}
+
+		public Double getGoalConcededPerGame() {
+			return goalConcededPerGame;
+		}
+
+		public void setGoalConcededPerGame(Double goalConcededPerGame) {
+			this.goalConcededPerGame = goalConcededPerGame;
 		}
 		
 	}
