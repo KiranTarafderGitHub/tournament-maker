@@ -237,7 +237,7 @@
 														<tr class="border-bottom" style="text-align:left;"  th:each="stat,iter: ${statView.goalsConcededPerGame}" th:if="${iter.count <= 5 }">
 															<td style="width:25px;text-align:left;" th:text="${iter.count}"></td>
 															<td style="width:40%;text-align:left;font-weight: bold;" th:text="${stat.name}"></td>
-															<td style="text-align:left;font-weight: bold;" th:text="${stat.goalAlloted}"></td>
+															<td style="text-align:left;font-weight: bold;" th:text="${stat.goalConcededPerGame}"></td>
 															
 														</tr>
 													</tbody>
