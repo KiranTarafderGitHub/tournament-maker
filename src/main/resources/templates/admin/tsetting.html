@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<title>Tournament Setting</title>
+<div th:replace="fragments/header :: header"></div>
+
+<body class="hold-transition sidebar-mini">
+	<!-- Site wrapper START-->
+	<div class="wrapper">
+		<!-- TOP Menu (all meta link scripts go here ) START -->
+		<div th:replace="fragments/top-menu :: top-menu"></div>
+		<!-- TOP Menu (all meta link scripts go here ) END -->
+		<!-- Left side column. contains the sidebar START -->
+		<div th:replace="fragments/left-menu-panel :: left-menu-panel"></div>
+		<!-- Left side column. contains the sidebar END -->
+		<!-- Content Wrapper. Contains page content START -->
+		<div class="content-wrapper">
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>League</h1>
+						</div>
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">League</a></li>
+								<li class="breadcrumb-item active">Setting</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+			<section class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="box-header">
+	                                <div class="alert alert-success" th:if="${successMsg != null}">
+	                                    <strong>Success! </strong>
+	                                    <div th:text="${successMsg}"/>
+	                                </div>
+	                                <div class="alert alert-warning" th:if="${warningMessage != null}">
+	                                    <strong>Warning! </strong>
+	                                    <div th:text="${warningMessage}"/>
+	                                </div>
+	                                <div class="alert alert-danger" th:if="${errorMsg != null}">
+	                                    <strong>Failure! </strong>
+	                                    <div th:text="${errorMsg}"/>
+	                                </div>
+	                            </div>
+	                    	</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="card">
+									<!--  -->
+									<form th:object="${headline}" method="post" id="headlineForm" data-th-action="@{/admin/update/headline.html}"  >
+
+										<div class="card-header">
+											<h3 class="card-title">Add New Headline</h3>
+										</div>
+										<div class="card-body pt-4 pb-4">
+											<div class="row">
+											
+												<div class="col-sm-12" id="">
+													<div class="row form-group ntype description">
+														<label for="teams"
+															class="col-sm-3 control-label text-right">Headline</label>
+														<textarea rows="6" th:field="*{description}" 
+															class="col-sm-7 form-control"  placeholder="Enter headline text"></textarea>
+													</div>
+												</div>
+												
+											</div>
+										</div>
+										<div class="card-footer">
+											<input type="reset" class="btn btn-danger" value="Reset">
+											<button type="submit" id="btnSubmit"
+												class="btn btn-primary pull-right">Submit</button>
+										</div>
+									</form>
+
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-12">
+							<div class="box">
+								<div class="card">
+									<div class="card-header">
+										<div class="row">
+											<div class="col-3">
+												<h3 class="card-title">Headline</h3>
+											</div>
+										</div>
+										
+									</div>
+									<div class="card-body">
+	
+										<table   id="table" class="mytable" width="100%">
+												<thead style="margin-top: 5px;background-color:#5DADE2;">
+													<tr>
+														
+														<th>#</th>
+														<th>Date</th>
+														<th>Description</th>
+														<th>Operation</th>
+														
+													</tr>
+												</thead>
+												<tbody>
+													<tr class="border-bottom" style="text-align:center;"  th:each="headline,iter: ${headlines}">
+																											
+														<td style="max-width:20px;text-align:center;" th:text="${iter.count}"></td>
+														<td style="max-width:50px;text-align:left;" th:text="${headline.headlineDate}"></td>
+														<td style="max-width:150px;text-align:left;" th:text="${headline.description}"></td>
+														<td style="max-width:50px;text-align:center;">
+															<form method="post" th:action="@{/admin/delete/headline.html}" id="headlineDeleteForm" action="#"  >
+																<input type="hidden" name="headlineId" th:value="${headline.id}">
+																<button type="submit" class="btn btn-danger"> Delete </button> 
+															</form>
+														 </td>
+													</tr>
+												</tbody>
+										</table>
+										
+									
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					<div class="row" >
+						<div class="col-12">
+							<div class="box">
+								<div class="card">
+									<div class="card-header">
+										<div class="row">
+											<div class="col-9">
+												<h3 class="card-title" th:text="${tournament.name} + '  (' + ${tournament.code} + ')'">Name</h3> 
+											</div>
+											<div class="col-3" style="text-align:right;">
+												<a class="btn btn-primary" href="/admin/backup/create" > Backup Data</a>
+											</div>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</section>
+		</div>
+		<div th:replace="fragments/footer :: footer"></div>
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<div th:replace="fragments/common-scripts :: common-scripts"></div>
+	<script type="text/javascript">
+		var dataTable = null;
+		$(function() {
+			
+			var table = $(".mytable").DataTable({
+				"retrieve" : true,
+				"bSort" : false,
+				"info" : false,
+				"paging" : false,
+				"searching" : false,
+				"ordering" : false,
+				"autoWidth" : true,
+				"deferLoading" : 50
+			
+			});
+			
+			$(".matchdayTableHead").click(function() {
+			    var tableBody = $(this).next();
+			    if($(tableBody).is(":visible"))
+			    {
+			    	$(tableBody).hide();
+			    }
+			    else
+			    {
+			    	$(tableBody).show();
+			    }
+			});
+			
+		}); 
+	</script>
+	<style>
+	table {
+	  font-family: arial, sans-serif !important;
+	  border-collapse: collapse !important;
+	  width: 100%;
+	}
+	
+	tr.border-bottom td {
+        border-bottom: 1pt solid #dddddd;
+     }
+	
+	th {
+	  border: 1px solid #dddddd !important;
+	  text-align: center;
+	  padding: 8px !important;
+	}
+	
+	td {
+	  border: 1px 0px 1px 0px solid #dddddd !important;
+	  text-align: center;
+	  padding: 8px !important;
+	}
+	
+	/* tr:nth-child(even) {
+	  background-color: #dddddd !important;
+	} */
+	</style>
+	
+</body>
+</html>

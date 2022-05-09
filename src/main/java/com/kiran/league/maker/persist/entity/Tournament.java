@@ -21,6 +21,8 @@ public class Tournament {
 	private String tournamentType;
 	
 	private String adminEmail;
+	
+	private String standingColor;
 
 	public Tournament() {
 		// TODO Auto-generated constructor stub
@@ -65,6 +67,15 @@ public class Tournament {
 
 	public void setAdminEmail(String adminEmail) {
 		this.adminEmail = adminEmail;
+	}
+
+	
+	public String getStandingColor() {
+		return standingColor;
+	}
+
+	public void setStandingColor(String standingColor) {
+		this.standingColor = standingColor;
 	}
 
 	@Override

@@ -380,6 +380,51 @@ public class LeagueAdminController {
         return getAddTeam(principal,model);
     }
 	
+	@GetMapping("/view/tsetting.html")
+    public ModelAndView viewTournamentSetting(Principal principal, ModelAndView model)
+    {
+		Tournament tournament = new Tournament();
+        try
+        {
+        	UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
+            User user = ((User) _principal.getPrincipal());
+            
+        	tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));        	
+        	
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        }
+        model.addObject("tournament",tournament);
+        model.setViewName("admin/tsetting");
+        
+        return model;
+    }
+	
+	@PostMapping("/view/tsetting.html")
+    public ModelAndView viewTournamentSettingPost(Principal principal, ModelAndView model, @ModelAttribute Tournament tournament)
+    {
+        try
+        {
+        	UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
+            User user = ((User) _principal.getPrincipal());
+            
+        	tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));        	
+        	
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        }
+        model.addObject("tournament",tournament);
+        model.setViewName("admin/tsetting");
+        
+        return model;
+    }
+	
 	
 	
 }

@@ -87,6 +87,13 @@
                 </a>
               </li>
               
+              <li class="nav-item" sec:authorize="hasAuthority('league.admin')">
+                <a href="/admin/view/tsetting.html" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p>Tournament Settings</p>
+                </a>
+              </li>
+              
               
             </ul>
 		  </li>
