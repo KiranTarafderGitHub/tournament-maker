@@ -59,20 +59,20 @@
 							<div class="box">
 								<div class="card">
 									<!--  -->
-									<form th:object="${headline}" method="post" id="headlineForm" data-th-action="@{/admin/update/headline.html}"  >
+									<form th:object="${tournament}" method="post" id="colorForm" data-th-action="@{/admin/view/tsetting.html}"  >
 
 										<div class="card-header">
-											<h3 class="card-title">Add New Headline</h3>
+											<h3 class="card-title">Add Team Standing Colors</h3>
 										</div>
 										<div class="card-body pt-4 pb-4">
 											<div class="row">
-											
+												<input type="hidden" th:field="*{id}"/>
 												<div class="col-sm-12" id="">
 													<div class="row form-group ntype description">
 														<label for="teams"
-															class="col-sm-3 control-label text-right">Headline</label>
-														<textarea rows="6" th:field="*{description}" 
-															class="col-sm-7 form-control"  placeholder="Enter headline text"></textarea>
+															class="col-sm-3 control-label text-right">Standing Color</label>
+														<textarea rows="3" th:field="*{standingColor}" 
+															class="col-sm-7 form-control"  placeholder="Enter Standing color in {team count}:{color code} format in ascending order seperated by pipe. Sample 4:green|5:yellow|3:red. It will result in top 4 as green, next 5 as yellow and next 3 teams as red "></textarea>
 													</div>
 												</div>
 												
@@ -90,53 +90,6 @@
 						</div>
 					</div>
 					
-					<div class="row">
-						<div class="col-12">
-							<div class="box">
-								<div class="card">
-									<div class="card-header">
-										<div class="row">
-											<div class="col-3">
-												<h3 class="card-title">Headline</h3>
-											</div>
-										</div>
-										
-									</div>
-									<div class="card-body">
-	
-										<table   id="table" class="mytable" width="100%">
-												<thead style="margin-top: 5px;background-color:#5DADE2;">
-													<tr>
-														
-														<th>#</th>
-														<th>Date</th>
-														<th>Description</th>
-														<th>Operation</th>
-														
-													</tr>
-												</thead>
-												<tbody>
-													<tr class="border-bottom" style="text-align:center;"  th:each="headline,iter: ${headlines}">
-																											
-														<td style="max-width:20px;text-align:center;" th:text="${iter.count}"></td>
-														<td style="max-width:50px;text-align:left;" th:text="${headline.headlineDate}"></td>
-														<td style="max-width:150px;text-align:left;" th:text="${headline.description}"></td>
-														<td style="max-width:50px;text-align:center;">
-															<form method="post" th:action="@{/admin/delete/headline.html}" id="headlineDeleteForm" action="#"  >
-																<input type="hidden" name="headlineId" th:value="${headline.id}">
-																<button type="submit" class="btn btn-danger"> Delete </button> 
-															</form>
-														 </td>
-													</tr>
-												</tbody>
-										</table>
-										
-									
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 					
 					
 					<div class="row" >

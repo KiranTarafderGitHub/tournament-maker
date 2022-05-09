@@ -136,4 +136,11 @@ public class TournamnetServiceImpl implements TournamnetService {
 		return tournament;
 	}
 
+	@Override
+	public Tournament saveTournament(Tournament tournament) {
+		
+		return tournamentRepository.save(tournament);
+		
+	}
+
 }

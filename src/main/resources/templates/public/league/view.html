@@ -92,8 +92,8 @@
 										<table   id="table" class="mytable" width="100%">
 												<thead style="margin-top: 5px;background-color:#5DADE2;">
 													<tr>
-														
-														<th>#</th>
+														<th style="max-width: 3px !important; width: 3px !important;padding: 1px !important; border-right:none !important;"></th>
+														<th style="border-left:none !important;">#</th>
 														<th>Team</th>
 														<th>Played</th>
 														<th>Won</th>
@@ -109,7 +109,8 @@
 												</thead>
 												<tbody>
 													<tr class="border-bottom" style="text-align:center;"  th:each="t,iter: ${leagueView.teams}">
-																											
+																					
+														<td th:style="'max-width: 3px !important; width: 3px !important;padding: 1px !important;background-color:'+ @{${t.standingColor}} +'; '"></td>						
 														<td style="max-width:20px;text-align:center;" th:text="${iter.count}"></td>
 														<td style="max-width:100px;text-align:left;font-weight: bold;" th:text="${t.teamName}"></td>
 														<td style="max-width:50px;text-align:center;" th:text="${t.matchPlayed}"></td>

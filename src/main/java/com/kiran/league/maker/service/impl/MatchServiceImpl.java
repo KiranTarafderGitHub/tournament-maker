@@ -3,6 +3,7 @@ package com.kiran.league.maker.service.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,8 +12,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.groovy.util.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -538,9 +541,9 @@ public class MatchServiceImpl implements MatchService {
 
 			teamSummaryList.add(tsView);
 
-			double goalPerMatch = (double) goalScored / (double) matchPlayed;
-			double pointPerMatch = (double) totalPoint / (double) matchPlayed;
-			double goalConcededPerMatch = (double) goalConceded / (double) matchPlayed;
+			double goalPerMatch = matchPlayed > 0 ? (double) goalScored / (double) matchPlayed : 0;
+			double pointPerMatch = matchPlayed > 0 ? (double) totalPoint / (double) matchPlayed : 0;
+			double goalConcededPerMatch = matchPlayed > 0 ? (double) goalConceded / (double) matchPlayed : 0;
 			
 			goalPerMatch = round(goalPerMatch, 2);
 			pointPerMatch = round(pointPerMatch, 2);
@@ -573,6 +576,38 @@ public class MatchServiceImpl implements MatchService {
 		List<TeamSummaryView> sortedTeamList = sortTeamForLeague(teamSummaryList);
 		statView = sortTeamForLeagueStat(tmpStatView);
 
+		//set the team standing colors
+		if(StringUtils.isNotEmpty(tournament.getStandingColor()))
+		{
+			Map<Integer,String> codes = new HashMap<>();
+			List<String> standingColorPair = Arrays.asList(StringUtils.split(tournament.getStandingColor(),"|")) ;
+			if(CollectionUtils.isNotEmpty(standingColorPair))
+			{
+				int tpos = 0;
+				for(String p : standingColorPair)
+				{
+					String[] pair = StringUtils.split(p,":");
+					
+					Integer  count = Integer.valueOf(pair[0]);
+					String   code = pair[1];
+					
+					for(int k = 1; k <= count; k++)
+					{
+						tpos++;
+						codes.put(tpos, code);
+					}
+					
+				}
+				
+			}
+			
+			for(int i = 0; i < sortedTeamList.size(); i++)
+			{
+				TeamSummaryView team = sortedTeamList.get(i);
+				team.setStandingColor(codes.get((i+1)));
+			}
+		}
+		
 		leagueTableView.setTeams(sortedTeamList);
 
 		tournamentSummaryView.setLeagueTableView(leagueTableView);

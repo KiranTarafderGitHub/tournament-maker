@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -406,12 +407,23 @@ public class LeagueAdminController {
 	@PostMapping("/view/tsetting.html")
     public ModelAndView viewTournamentSettingPost(Principal principal, ModelAndView model, @ModelAttribute Tournament tournament)
     {
+		
+		log.info("Tournament setting api called for Tournament " + tournament); 
+		Tournament tournamentOrg = new Tournament();
         try
         {
         	UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
             User user = ((User) _principal.getPrincipal());
             
-        	tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));        	
+        	tournamentOrg = tournamentAdminService.getTournamentForUser(new UserEntity(user));
+        	if(StringUtils.isNotEmpty(tournament.getStandingColor()))
+        	{
+        		tournamentOrg.setStandingColor(tournament.getStandingColor());
+        		tournamnetService.saveTournament(tournamentOrg);
+        		model.addObject("successMsg","Color configuration successfully saved");
+        	}
+        	else
+        		model.addObject("errorMsg","Color configuration cannot be empty");
         	
         }
         catch (Exception e)
@@ -419,7 +431,7 @@ public class LeagueAdminController {
             log.error(e.getMessage(),e);
             model.addObject("errorMsg",e.getMessage());
         }
-        model.addObject("tournament",tournament);
+        model.addObject("tournament",tournamentOrg);
         model.setViewName("admin/tsetting");
         
         return model;

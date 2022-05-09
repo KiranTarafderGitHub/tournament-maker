@@ -14,4 +14,6 @@ public interface TournamnetService {
 	
 	public Tournament addTeamToExistingTournament(Tournament tournament, String teamName);
 	
+	public Tournament saveTournament(Tournament tournament);
+	
 }

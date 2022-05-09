@@ -3,9 +3,9 @@ package com.kiran.league.maker.common.bean.rest;
 import java.util.List;
 
 public class LeagueTableView {
-	
+
 	private List<TeamSummaryView> teams;
-	
+
 	public List<TeamSummaryView> getTeams() {
 		return teams;
 	}
@@ -14,39 +14,39 @@ public class LeagueTableView {
 		this.teams = teams;
 	}
 
-
 	@Override
 	public String toString() {
 		return "LeagueTableView [teams=" + teams + "]";
 	}
 
-
-	public static class TeamSummaryView
-	{
+	public static class TeamSummaryView {
+		
 		private Long teamId;
-		
+
 		private String teamName;
-		
+
 		private Integer matchPlayed;
-		
+
 		private Integer matchWon;
-		
+
 		private Integer matchDraw;
-		
+
 		private Integer matchLost;
-		
+
 		private Integer goalScored;
-		
+
 		private Integer goalConceded;
-		
+
 		private Integer goalDifference;
-		
+
 		private Integer totalBonusPoint;
-		
+
 		private Integer totalPenaltyPoint;
-		
+
 		private Integer totalPoints;
-		
+
+		private String standingColor;
+
 		public TeamSummaryView() {
 		}
 
@@ -146,6 +146,14 @@ public class LeagueTableView {
 			this.totalPoints = totalPoints;
 		}
 
+		public String getStandingColor() {
+			return standingColor;
+		}
+
+		public void setStandingColor(String standingColor) {
+			this.standingColor = standingColor;
+		}
+
 		@Override
 		public String toString() {
 			return "TeamSummaryView [teamId=" + teamId + ", teamName=" + teamName + ", matchPlayed=" + matchPlayed
@@ -154,6 +162,6 @@ public class LeagueTableView {
 					+ goalDifference + ", totalBonusPoint=" + totalBonusPoint + ", totalPenaltyPoint="
 					+ totalPenaltyPoint + ", totalPoints=" + totalPoints + "]";
 		}
-		
+
 	}
 }
