@@ -2,7 +2,7 @@ package com.kiran.league.maker.common.bean;
 
 import java.util.List;
 
-import com.kiran.league.maker.persist.dto.User;
+import com.kiran.league.maker.common.bean.rest.UserBean;
 import com.kiran.league.maker.persist.entity.Match;
 import com.kiran.league.maker.persist.entity.Round;
 import com.kiran.league.maker.persist.entity.Team;
@@ -18,7 +18,7 @@ public class BackupBean {
 	
 	List<Team> teams;
 	
-	User adminUser;
+	UserBean adminUser;
 
 	public Tournament getTournament() {
 		return tournament;
@@ -52,19 +52,17 @@ public class BackupBean {
 		this.teams = teams;
 	}
 
-	
-	public User getAdminUser() {
+	public UserBean getAdminUser() {
 		return adminUser;
 	}
 
-	public void setAdminUser(User adminUser) {
+	public void setAdminUser(UserBean adminUser) {
 		this.adminUser = adminUser;
 	}
 
 	@Override
 	public String toString() {
 		return "BackupBean [tournament=" + tournament + ", rounds=" + rounds + ", matches=" + matches + ", teams="
-				+ teams + "]";
+				+ teams + ", adminUser=" + adminUser + "]";
 	}
-	
 }

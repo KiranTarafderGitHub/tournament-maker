@@ -4,8 +4,11 @@ package com.kiran.league.maker.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -32,13 +36,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kiran.league.maker.common.bean.BackupBean;
 import com.kiran.league.maker.common.bean.rest.LeagueTableView;
+import com.kiran.league.maker.common.bean.rest.RestoreBean;
 import com.kiran.league.maker.common.bean.rest.ScheduleView;
 import com.kiran.league.maker.common.bean.rest.UpdateScorePost;
+import com.kiran.league.maker.common.bean.rest.UserBean;
 import com.kiran.league.maker.persist.dto.User;
 import com.kiran.league.maker.persist.entity.Headline;
 import com.kiran.league.maker.persist.entity.Match;
@@ -211,6 +218,7 @@ public class LeagueAdminController {
 		{
 			UsernamePasswordAuthenticationToken _principal = ((UsernamePasswordAuthenticationToken) principal);
             User user = ((User) _principal.getPrincipal());
+            UserBean userBean = new UserBean();
             
         	Tournament tournament = tournamentAdminService.getTournamentForUser(new UserEntity(user));
     		List<Round> rounds = roundService.getRoundsForTournament(tournament);
@@ -223,7 +231,9 @@ public class LeagueAdminController {
     		backupBean.setRounds(rounds);
     		backupBean.setTeams(teams);
     		backupBean.setMatches(matches);
-    		backupBean.setAdminUser(user);
+    		
+    		BeanUtils.copyProperties(user, userBean);
+    		backupBean.setAdminUser(userBean);
     		
     		String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(backupBean);
     		
@@ -234,8 +244,11 @@ public class LeagueAdminController {
 
     	    InputStreamResource resource = new InputStreamResource(new FileInputStream(tmpFile));
 
+    	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	    Date today = new Date();
+    	    String dateStr = sdf.format(today);
 			
-			ContentDisposition contentDisposition = ContentDisposition.builder("inline").filename("league-"+tournament.getCode()+ "-backup.json") .build();
+			ContentDisposition contentDisposition = ContentDisposition.builder("inline").filename("league-"+tournament.getCode() + "-" + dateStr + "-bkp.json") .build();
 			 
     	    HttpHeaders headers = new HttpHeaders();
             headers.setContentDisposition(contentDisposition);
@@ -260,6 +273,7 @@ public class LeagueAdminController {
 		}
 		
 	}
+	
 	
 	@GetMapping("/view/headline.html")
     public ModelAndView viewHeadline(Principal principal, ModelAndView model)

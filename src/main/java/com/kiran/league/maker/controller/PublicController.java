@@ -1,5 +1,7 @@
 package com.kiran.league.maker.controller;
 
+import java.io.InputStream;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +19,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiran.league.maker.common.bean.BackupBean;
 import com.kiran.league.maker.common.bean.rest.CodeBean;
 import com.kiran.league.maker.common.bean.rest.LeagueTableView;
+import com.kiran.league.maker.common.bean.rest.RestoreBean;
 import com.kiran.league.maker.common.bean.rest.ScheduleView;
 import com.kiran.league.maker.common.bean.rest.StatView;
 import com.kiran.league.maker.common.bean.rest.TournamentCreate;
@@ -60,6 +66,9 @@ public class PublicController {
 	
 	@Autowired
 	PasswordEncoder encoder;
+	
+	@Autowired
+	ObjectMapper objectMapper;
 	
 	@Value("${application.url}")
 	String applicationUrl;
@@ -228,6 +237,67 @@ public class PublicController {
             model.addObject("errorMsg",e.getMessage());
         	model.setViewName("error");
         }
+        
+        return model;
+    }
+	
+	@GetMapping("/league/restore.html")
+    public ModelAndView restoreLeague(ModelAndView model)
+    {
+		
+        try
+        {
+        	model.addObject("restoreBean",new RestoreBean());
+        	model.setViewName("public/league/restore");
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        	model.setViewName("error");
+        }
+        
+        return model;
+    }
+	
+	@PostMapping("/backup/restore")
+    public ModelAndView backupRestore(Principal principal, ModelAndView model, @ModelAttribute RestoreBean restoreBean)
+    {
+        try
+        {
+        	if(restoreBean.getJsonFile() != null)
+        	{
+        		MultipartFile jsonFile = restoreBean.getJsonFile();
+        		InputStream inStream = jsonFile.getInputStream();
+        		BackupBean backupBean = objectMapper.readValue(inStream, BackupBean.class);
+        		
+        		log.info(backupBean);
+        		
+            	Tournament tournament = tournamnetService.createNewTournamnet(null);
+            	
+            	UserEntity user = tournamentAdminService.creteAdminUserForTournament(tournament);
+            	
+            	String adminAccessUrl = applicationUrl+adminUrl+tournament.getCode();
+            	String userAccessUrl = applicationUrl+userUrl+tournament.getCode();
+            	
+            	model.addObject("adminAccessUrl",adminAccessUrl);
+            	model.addObject("userAccessUrl",userAccessUrl);
+            	
+            	model.addObject("adminUsername",user.getUsername());
+            	model.addObject("adminPassword",defaultAdminPassword);
+            	model.addObject("successMsg","League Successfully Restored");
+            	model.addObject("tournament",tournament);
+            	
+            	model.setViewName("public/league/credential");
+            	
+        	}
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+            model.addObject("errorMsg",e.getMessage());
+        }
+        
         
         return model;
     }
