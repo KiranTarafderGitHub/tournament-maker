@@ -273,9 +273,9 @@ public class PublicController {
         		
         		log.info(backupBean);
         		
-            	Tournament tournament = tournamnetService.createNewTournamnet(null);
+            	Tournament tournament = tournamnetService.restoreTournament(backupBean);
             	
-            	UserEntity user = tournamentAdminService.creteAdminUserForTournament(tournament);
+            	UserEntity user = tournamentAdminService.getTournamentAdminUser(tournament);
             	
             	String adminAccessUrl = applicationUrl+adminUrl+tournament.getCode();
             	String userAccessUrl = applicationUrl+userUrl+tournament.getCode();

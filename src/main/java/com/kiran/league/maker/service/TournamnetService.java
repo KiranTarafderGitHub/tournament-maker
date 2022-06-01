@@ -1,5 +1,6 @@
 package com.kiran.league.maker.service;
 
+import com.kiran.league.maker.common.bean.BackupBean;
 import com.kiran.league.maker.common.bean.rest.TournamentCreate;
 import com.kiran.league.maker.persist.entity.Team;
 import com.kiran.league.maker.persist.entity.Tournament;
@@ -15,5 +16,7 @@ public interface TournamnetService {
 	public Tournament addTeamToExistingTournament(Tournament tournament, String teamName);
 	
 	public Tournament saveTournament(Tournament tournament);
+	
+	public Tournament restoreTournament(BackupBean backupBean);
 	
 }

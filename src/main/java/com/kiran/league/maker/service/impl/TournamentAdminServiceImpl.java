@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -90,6 +91,18 @@ public class TournamentAdminServiceImpl implements TournamentAdminService {
 			return tournamentOptional.get();
 		else
 			throw new NoDataFoundException("Could not find Tournamnet for user");
+	}
+
+	@Override
+	public UserEntity getTournamentAdminUser(Tournament tournament) {
+		
+		TournamentAdmin tournamentAdmin =  tournamentAdminRepository.findByTournamentId(tournament.getId());
+		Optional<UserEntity> userEntityOptional = userRepository.findById(tournamentAdmin.getUserId());
+		
+		if(userEntityOptional.isPresent())
+			return userEntityOptional.get();
+		else
+			throw new UsernameNotFoundException("No admin user found for tournamnet : " + tournament.getName());
 	}
 
 }

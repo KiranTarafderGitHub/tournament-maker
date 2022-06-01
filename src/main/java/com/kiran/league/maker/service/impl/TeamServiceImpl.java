@@ -85,4 +85,13 @@ public class TeamServiceImpl implements TeamService {
 	
 	}
 
+	@Override
+	public void deleteTeams(List<Team> teams) {
+		teams.forEach(t -> {
+			Optional<Team> optionalTeam = teamRepository.findById(t.getId());
+			if(optionalTeam.isPresent())
+				teamRepository.delete(t);
+		});
+	}
+
 }

@@ -9,13 +9,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.groovy.util.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -614,6 +614,16 @@ public class MatchServiceImpl implements MatchService {
 		tournamentSummaryView.setStatView(statView);
 
 		return tournamentSummaryView;
+	}
+
+	@Override
+	public void deleteMatches(List<Match> matchs) {
+		matchs.forEach(m -> {
+			Optional<Match> optionalMatch = matchRepository.findById(m.getId());
+			if(optionalMatch.isPresent())
+				matchRepository.delete(m);
+		});
+		
 	}
 
 }

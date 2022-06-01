@@ -12,4 +12,6 @@ public interface TeamService {
 	Team getTeamById(Long id);
 	
 	List<Team> getAllTeamOfTournament(Tournament tournament);
+	
+	void deleteTeams(List<Team> teams);
 }

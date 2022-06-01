@@ -8,5 +8,7 @@ public interface TournamentAdminService {
 	UserEntity creteAdminUserForTournament(Tournament tournament);
 	
 	Tournament getTournamentForUser(UserEntity user);
+	
+	UserEntity getTournamentAdminUser(Tournament tournament);
 
 }

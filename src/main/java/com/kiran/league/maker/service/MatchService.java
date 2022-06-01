@@ -33,4 +33,6 @@ public interface MatchService {
 	public StatView getLeagueStats(Tournament tournament);
 	
 	public TournamentSummaryView getTournamentSummary(Tournament tournament);
+	
+	public void deleteMatches(List<Match> matchs);
 }
