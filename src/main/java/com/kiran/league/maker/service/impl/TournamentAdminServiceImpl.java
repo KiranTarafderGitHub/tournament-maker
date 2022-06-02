@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.kiran.league.maker.common.bean.BackupBean;
 import com.kiran.league.maker.common.exception.NoDataFoundException;
 import com.kiran.league.maker.common.util.RandomGenerator;
 import com.kiran.league.maker.persist.dao.RoleRepository;
@@ -103,6 +104,35 @@ public class TournamentAdminServiceImpl implements TournamentAdminService {
 			return userEntityOptional.get();
 		else
 			throw new UsernameNotFoundException("No admin user found for tournamnet : " + tournament.getName());
+	}
+
+	@Override
+	public UserEntity restoreAdminUserForTournament(Tournament tournament, BackupBean backupBean) {
+		
+		UserEntity user = new UserEntity();
+		user.setUsername(backupBean.getAdminUser().getUsername());
+		user.setPassword(encoder.encode(defaultAdminPassword));
+		user.setUserType(UserType.LEAGUE_ADMIN);
+		user.setFirstName(backupBean.getAdminUser().getFirstName());
+		user.setLastName(backupBean.getAdminUser().getLastName());
+		user.setEmail(backupBean.getAdminUser().getEmail());
+		user.setCreatedBy("System");
+		user.setEnabled(true);
+		
+		RoleEntity role =  roleRepository.findByName(UserType.LEAGUE_ADMIN.toString().toLowerCase());
+		Set<RoleEntity> roleSet = new HashSet<>();
+		roleSet.add(role);
+		
+		user.setRoles(roleSet);
+		userRepository.saveAndFlush(user);
+		
+		TournamentAdmin tournamentAdmin = new TournamentAdmin();
+		tournamentAdmin.setUserId(user.getId());
+		tournamentAdmin.setTournamentId(tournament.getId());
+		
+		tournamentAdminRepository.save(tournamentAdmin);
+		
+		return user;
 	}
 
 }

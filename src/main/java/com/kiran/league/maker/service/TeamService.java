@@ -14,4 +14,6 @@ public interface TeamService {
 	List<Team> getAllTeamOfTournament(Tournament tournament);
 	
 	void deleteTeams(List<Team> teams);
+	
+	Team saveTeam(Team team);
 }

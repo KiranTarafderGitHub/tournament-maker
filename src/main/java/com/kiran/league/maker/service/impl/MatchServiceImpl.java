@@ -626,4 +626,9 @@ public class MatchServiceImpl implements MatchService {
 		
 	}
 
+	@Override
+	public Match saveMatch(Match match) {
+		return matchRepository.saveAndFlush(match);
+	}
+
 }

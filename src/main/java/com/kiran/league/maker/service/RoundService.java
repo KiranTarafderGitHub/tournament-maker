@@ -14,5 +14,7 @@ public interface RoundService {
 	public Round addRoundToExistingTournament(Tournament tournament);
 	
 	public void deleteRounds(List<Round> rounds);
+	
+	public Round saveRound(Round round);
 
 }

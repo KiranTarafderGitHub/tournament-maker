@@ -275,7 +275,7 @@ public class PublicController {
         		
             	Tournament tournament = tournamnetService.restoreTournament(backupBean);
             	
-            	UserEntity user = tournamentAdminService.getTournamentAdminUser(tournament);
+            	UserEntity user = tournamentAdminService.restoreAdminUserForTournament(tournament, backupBean);
             	
             	String adminAccessUrl = applicationUrl+adminUrl+tournament.getCode();
             	String userAccessUrl = applicationUrl+userUrl+tournament.getCode();
@@ -287,8 +287,9 @@ public class PublicController {
             	model.addObject("adminPassword",defaultAdminPassword);
             	model.addObject("successMsg","League Successfully Restored");
             	model.addObject("tournament",tournament);
-            	
             	model.setViewName("public/league/credential");
+            	
+            	
             	
         	}
         }
@@ -296,7 +297,9 @@ public class PublicController {
         {
             log.error(e.getMessage(),e);
             model.addObject("errorMsg",e.getMessage());
+            model.setViewName("error");
         }
+        
         
         
         return model;

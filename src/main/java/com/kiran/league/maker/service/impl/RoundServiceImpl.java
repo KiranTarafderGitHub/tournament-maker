@@ -75,4 +75,9 @@ public class RoundServiceImpl implements RoundService {
 		});
 	}
 
+	@Override
+	public Round saveRound(Round round) {
+		return roundRepository.saveAndFlush(round);
+	}
+
 }
