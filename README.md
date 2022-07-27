@@ -7,6 +7,7 @@ Update scores as admin. Separate url for league players.
 Convenient view for League Standing, Statistics and Schedule.
 
 url: https://github.com/KiranTarafderGitHub/tournament-maker/
+
 demo: http://3.111.239.232:8099/
 
 # Requirements to build the project:
