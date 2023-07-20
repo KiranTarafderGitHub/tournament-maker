@@ -1,4 +1,4 @@
-# tournament-maker
+# Tournament Maker / Schedular
 
 Tournament Maker
 
